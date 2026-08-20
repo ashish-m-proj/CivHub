@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivHub — Study Materials</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+            sidebar: '#0f172a' 
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex h-screen overflow-hidden text-sm">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-sidebar flex flex-col justify-between hidden md:flex z-20 shrink-0">
+    <div>
+      <!-- Logo -->
+      <div class="h-16 flex items-center px-6 border-b border-slate-800">
+        <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center font-bold text-sm mr-3">
+          <i class="fas fa-building-columns"></i>
+        </div>
+        <span class="font-bold text-lg text-white tracking-tight">CivHub</span>
+      </div>
+      
+      <!-- Nav Links -->
+      <div class="px-4 py-6 space-y-1">
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+        
+        <!-- Note: Overview is now inactive, Study Materials is active -->
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-chart-pie w-5 text-center"></i> Overview
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 bg-brand-600 text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-book-open w-5 text-center"></i> Study Materials
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-users w-5 text-center"></i> Campus Clubs
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-calendar-alt w-5 text-center"></i> Events Calendar
+        </a>
+
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Personal</p>
+        
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-cloud-upload-alt w-5 text-center"></i> My Uploads
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-bookmark w-5 text-center"></i> Saved Resources
+        </a>
+      </div>
+    </div>
+
+    <!-- User Profile Snippet -->
+    <div class="p-4 border-t border-slate-800">
+      <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-xs">
+          AK
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-white truncate">Ashish Kumar</p>
+          <p class="text-xs text-slate-400 truncate">ashish_k@ce.iitr.ac.in</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+    
+    <!-- Top Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30 shrink-0">
+      <!-- Breadcrumbs -->
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-slate-400">Pages</span>
+        <span class="text-slate-400">/</span>
+        <span class="text-slate-400">Study Materials</span>
+        <span class="text-slate-400">/</span>
+        <span class="font-medium text-slate-900">Repository</span>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Action Icons -->
+        <button class="relative text-slate-500 hover:text-slate-700 transition-colors p-2">
+          <i class="fas fa-bell"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="p-8 max-w-7xl mx-auto w-full space-y-6">
+      
+      <!-- Page Header & Global Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Study Materials</h1>
+          <p class="text-slate-500 mt-1">Browse, download, and contribute verified academic resources.</p>
+        </div>
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+            <i class="fas fa-cloud-upload-alt text-xs"></i> Upload Material
+          </button>
+        </div>
+      </div>
+
+      <!-- Advanced Filter & Search Bar -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+        <!-- Search Input -->
+        <div class="relative w-full md:w-96">
+          <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+          <input type="text" placeholder="Search by file name, topic, or keyword..." class="w-full pl-9 pr-4 py-2 rounded-md bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 text-slate-800 transition-shadow">
+        </div>
+        
+        <!-- Dropdown Filters -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-md focus:ring-brand-500 focus:border-brand-500 block py-2 px-3 outline-none">
+            <option>All Semesters</option>
+            <option selected>4th Semester</option>
+            <option>3rd Semester</option>
+            <option>2nd Semester</option>
+            <option>1st Semester</option>
+          </select>
+          <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-md focus:ring-brand-500 focus:border-brand-500 block py-2 px-3 outline-none">
+            <option>All Subjects</option>
+            <option>Fluid Mechanics</option>
+            <option>Structural Analysis</option>
+            <option>Geotech Engineering</option>
+            <option>Surveying</option>
+          </select>
+          <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-md focus:ring-brand-500 focus:border-brand-500 block py-2 px-3 outline-none">
+            <option>All Types</option>
+            <option>PYQs (Previous Papers)</option>
+            <option>Handwritten Notes</option>
+            <option>Lab Manuals</option>
+            <option>Assignments</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Subject Folders Grid -->
+      <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mt-8 mb-4">Browse by Subject (Sem 4)</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <!-- Folder 1 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900">Fluid Mechanics</h3>
+            <p class="text-xs text-slate-500 mt-0.5">42 Files</p>
+          </div>
+        </div>
+
+        <!-- Folder 2 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900">Structural Analysis</h3>
+            <p class="text-xs text-slate-500 mt-0.5">38 Files</p>
+          </div>
+        </div>
+
+        <!-- Folder 3 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900">Geotech Eng.</h3>
+            <p class="text-xs text-slate-500 mt-0.5">27 Files</p>
+          </div>
+        </div>
+
+        <!-- Folder 4 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900">Surveying II</h3>
+            <p class="text-xs text-slate-500 mt-0.5">19 Files</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Comprehensive File Data Table -->
+      <div class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">All Documents</h2>
+          <div class="flex gap-2">
+            <button class="w-8 h-8 rounded bg-white border border-slate-200 flex items-center justify-center text-brand-600 shadow-sm"><i class="fas fa-list"></i></button>
+            <button class="w-8 h-8 rounded bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 shadow-sm"><i class="fas fa-border-all"></i></button>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-600">
+              <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+                <tr>
+                  <th class="px-6 py-4 font-medium">Document Name</th>
+                  <th class="px-6 py-4 font-medium">Subject</th>
+                  <th class="px-6 py-4 font-medium">Type</th>
+                  <th class="px-6 py-4 font-medium">Uploaded By</th>
+                  <th class="px-6 py-4 font-medium">Date added</th>
+                  <th class="px-6 py-4 font-medium text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                
+                <!-- File Row 1 -->
+                <tr class="hover:bg-slate-50 transition-colors group">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+                      <div>
+                        <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Fluid Mechanics Unit 2 Notes.pdf</p>
+                        <p class="text-xs text-slate-400 mt-0.5">8.2 MB</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Fluid Mechanics</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-slate-100 text-slate-700 font-medium px-2.5 py-1 rounded-md text-xs border border-slate-200">Handwritten Notes</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">RM</div>
+                      <span>Rahul M.</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Today, 10:30 AM</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button class="text-slate-400 hover:text-amber-500 transition-colors" title="Bookmark"><i class="far fa-bookmark text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-slate-700 transition-colors" title="More options"><i class="fas fa-ellipsis-v text-lg px-2"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- File Row 2 -->
+                <tr class="hover:bg-slate-50 transition-colors group">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+                      <div>
+                        <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Structural Analysis PYQs (2020-25).pdf</p>
+                        <p class="text-xs text-slate-400 mt-0.5">14.5 MB</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Structural Analysis</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-indigo-50 text-indigo-700 font-medium px-2.5 py-1 rounded-md text-xs border border-indigo-200">PYQ</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">AS</div>
+                      <span>Aman S.</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Yesterday</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button class="text-slate-400 hover:text-amber-500 transition-colors" title="Bookmark"><i class="far fa-bookmark text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-slate-700 transition-colors" title="More options"><i class="fas fa-ellipsis-v text-lg px-2"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- File Row 3 -->
+                <tr class="hover:bg-slate-50 transition-colors group">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-file-word text-blue-500 text-xl"></i>
+                      <div>
+                        <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Geotech Assignment 1 Draft.docx</p>
+                        <p class="text-xs text-slate-400 mt-0.5">1.2 MB</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Geotech Engineering</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-emerald-50 text-emerald-700 font-medium px-2.5 py-1 rounded-md text-xs border border-emerald-200">Assignment</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">PK</div>
+                      <span>Priya K.</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Aug 14, 2026</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button class="text-slate-400 hover:text-amber-500 transition-colors" title="Bookmark"><i class="far fa-bookmark text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-slate-700 transition-colors" title="More options"><i class="fas fa-ellipsis-v text-lg px-2"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                
+                 <!-- File Row 4 -->
+                <tr class="hover:bg-slate-50 transition-colors group">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-file-excel text-green-500 text-xl"></i>
+                      <div>
+                        <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Surveying Leveling Data Template.xlsx</p>
+                        <p class="text-xs text-slate-400 mt-0.5">340 KB</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Surveying II</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-orange-50 text-orange-700 font-medium px-2.5 py-1 rounded-md text-xs border border-orange-200">Lab Material</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center text-xs font-bold text-brand-600">CR</div>
+                      <span>CR Office</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Aug 12, 2026</td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button class="text-slate-400 hover:text-amber-500 transition-colors" title="Bookmark"><i class="far fa-bookmark text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                      <button class="text-slate-400 hover:text-slate-700 transition-colors" title="More options"><i class="fas fa-ellipsis-v text-lg px-2"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+            <span class="text-sm text-slate-500">Showing 1 to 4 of 124 entries</span>
+            <div class="flex gap-1">
+              <button class="px-3 py-1 border border-slate-200 rounded text-sm text-slate-400 cursor-not-allowed">Previous</button>
+              <button class="px-3 py-1 border border-brand-600 bg-brand-50 text-brand-600 font-medium rounded text-sm">1</button>
+              <button class="px-3 py-1 border border-slate-200 hover:bg-slate-50 rounded text-sm text-slate-600">2</button>
+              <button class="px-3 py-1 border border-slate-200 hover:bg-slate-50 rounded text-sm text-slate-600">3</button>
+              <button class="px-3 py-1 border border-slate-200 hover:bg-slate-50 rounded text-sm text-slate-600">Next</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
