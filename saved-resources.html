@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivHub — Saved Resources</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+            sidebar: '#0f172a' 
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex h-screen overflow-hidden text-sm">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-sidebar flex flex-col justify-between hidden md:flex z-20 shrink-0">
+    <div>
+      <!-- Logo -->
+      <div class="h-16 flex items-center px-6 border-b border-slate-800">
+        <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center font-bold text-sm mr-3">
+          <i class="fas fa-building-columns"></i>
+        </div>
+        <span class="font-bold text-lg text-white tracking-tight">CivHub</span>
+      </div>
+      
+      <!-- Nav Links -->
+      <div class="px-4 py-6 space-y-1">
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+        
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-chart-pie w-5 text-center"></i> Overview
+        </a>
+        <a href="study-materials.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-book-open w-5 text-center"></i> Study Materials
+        </a>
+        <a href="campus-clubs.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-users w-5 text-center"></i> Campus Clubs
+        </a>
+        <a href="events-calendar.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-calendar-alt w-5 text-center"></i> Events Calendar
+        </a>
+
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Personal</p>
+        
+        <a href="my-uploads.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-cloud-upload-alt w-5 text-center"></i> My Uploads
+        </a>
+        <!-- Active Tab -->
+        <a href="saved-resources.html" class="flex items-center gap-3 px-3 py-2 bg-brand-600 text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-bookmark w-5 text-center"></i> Saved Resources
+        </a>
+      </div>
+    </div>
+
+    <!-- User Profile Snippet -->
+    <div class="p-4 border-t border-slate-800">
+      <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-xs">
+          AK
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-white truncate">Ashish Kumar</p>
+          <p class="text-xs text-slate-400 truncate">ashish_k@ce.iitr.ac.in</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+    
+    <!-- Top Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30 shrink-0">
+      <!-- Breadcrumbs -->
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-slate-400">Pages</span>
+        <span class="text-slate-400">/</span>
+        <span class="text-slate-400">Personal</span>
+        <span class="text-slate-400">/</span>
+        <span class="font-medium text-slate-900">Saved Resources</span>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <button class="relative text-slate-500 hover:text-slate-700 transition-colors p-2">
+          <i class="fas fa-bell"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="p-8 max-w-7xl mx-auto w-full space-y-8">
+      
+      <!-- Page Header & Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Saved Resources</h1>
+          <p class="text-slate-500 mt-1">Your personal collection of bookmarked materials and quick references.</p>
+        </div>
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2">
+            <i class="fas fa-folder-plus text-xs"></i> New Collection
+          </button>
+        </div>
+      </div>
+
+      <!-- Collections / Folders Grid -->
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">My Collections</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          
+          <!-- Collection 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center justify-between group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center text-xl group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                <i class="fas fa-folder-open"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Mid-Term Prep</h3>
+                <p class="text-xs text-slate-500 mt-0.5">8 Files</p>
+              </div>
+            </div>
+            <button class="text-slate-300 hover:text-slate-500 transition-colors"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+
+          <!-- Collection 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center justify-between group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                <i class="fas fa-folder-open"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Important Formulas</h3>
+                <p class="text-xs text-slate-500 mt-0.5">3 Files</p>
+              </div>
+            </div>
+            <button class="text-slate-300 hover:text-slate-500 transition-colors"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+
+          <!-- Collection 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-brand-400 hover:shadow-md cursor-pointer transition-all flex items-center justify-between group border-dashed bg-slate-50/50 justify-center">
+            <div class="text-center">
+              <i class="fas fa-plus text-slate-400 text-lg mb-1"></i>
+              <h3 class="font-medium text-slate-600">Create Folder</h3>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bookmarked Files Table -->
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col mt-4">
+        
+        <!-- Tabs & Search -->
+        <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50">
+          <div class="flex bg-white p-1 rounded-lg border border-slate-200 shadow-sm w-full sm:w-auto">
+            <button class="px-4 py-1.5 bg-slate-100 text-slate-800 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">All Saved</button>
+            <button class="px-4 py-1.5 text-slate-500 hover:text-slate-700 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Notes</button>
+            <button class="px-4 py-1.5 text-slate-500 hover:text-slate-700 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">PYQs</button>
+          </div>
+          
+          <div class="relative w-full sm:w-72">
+            <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+            <input type="text" placeholder="Search saved files..." class="w-full pl-9 pr-4 py-2 rounded-md bg-white border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 text-slate-800 transition-shadow">
+          </div>
+        </div>
+
+        <!-- File List -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-white text-slate-500 font-medium border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-4 font-medium">Document Name</th>
+                <th class="px-6 py-4 font-medium">Subject</th>
+                <th class="px-6 py-4 font-medium">Date Saved</th>
+                <th class="px-6 py-4 font-medium text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              
+              <!-- Saved Item 1 -->
+              <tr class="hover:bg-slate-50 transition-colors group">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+                    <div>
+                      <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Fluid Mechanics Unit 2 Notes.pdf</p>
+                      <p class="text-xs text-slate-400 mt-0.5">8.2 MB • Handwritten</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">Fluid Mechanics</td>
+                <td class="px-6 py-4">2 days ago</td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <!-- Solid bookmark icon since it's saved -->
+                    <button class="text-amber-500 hover:text-slate-400 transition-colors" title="Remove from saved"><i class="fas fa-bookmark text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-slate-700 transition-colors" title="Organize"><i class="fas fa-folder-plus text-lg px-2"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Saved Item 2 -->
+              <tr class="hover:bg-slate-50 transition-colors group">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+                    <div>
+                      <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Structural Analysis PYQs (2020-25).pdf</p>
+                      <p class="text-xs text-slate-400 mt-0.5">14.5 MB • Question Bank</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">Structural Analysis</td>
+                <td class="px-6 py-4">1 week ago</td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="text-amber-500 hover:text-slate-400 transition-colors" title="Remove from saved"><i class="fas fa-bookmark text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-slate-700 transition-colors" title="Organize"><i class="fas fa-folder-plus text-lg px-2"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Saved Item 3 -->
+              <tr class="hover:bg-slate-50 transition-colors group">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-file-image text-emerald-500 text-xl"></i>
+                    <div>
+                      <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Geotech Soil Mechanics Chart.jpg</p>
+                      <p class="text-xs text-slate-400 mt-0.5">2.4 MB • Reference</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">Geotech Engineering</td>
+                <td class="px-6 py-4">Aug 10, 2026</td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="text-amber-500 hover:text-slate-400 transition-colors" title="Remove from saved"><i class="fas fa-bookmark text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-slate-700 transition-colors" title="Organize"><i class="fas fa-folder-plus text-lg px-2"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Saved Item 4 -->
+              <tr class="hover:bg-slate-50 transition-colors group">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-file-word text-blue-500 text-xl"></i>
+                    <div>
+                      <p class="font-bold text-slate-900 group-hover:text-brand-600 transition-colors cursor-pointer">Surveying Leveling Data Template.docx</p>
+                      <p class="text-xs text-slate-400 mt-0.5">340 KB • Lab Manual</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">Surveying II</td>
+                <td class="px-6 py-4">Jul 28, 2026</td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="text-amber-500 hover:text-slate-400 transition-colors" title="Remove from saved"><i class="fas fa-bookmark text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-brand-600 transition-colors" title="Download"><i class="fas fa-download text-lg"></i></button>
+                    <button class="text-slate-400 hover:text-slate-700 transition-colors" title="Organize"><i class="fas fa-folder-plus text-lg px-2"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-between bg-white">
+          <span class="text-sm text-slate-500">Showing 1 to 4 of 24 saved items</span>
+          <div class="flex gap-1">
+            <button class="px-3 py-1 border border-slate-200 rounded text-sm text-slate-400 cursor-not-allowed">Previous</button>
+            <button class="px-3 py-1 border border-brand-600 bg-brand-50 text-brand-600 font-medium rounded text-sm">1</button>
+            <button class="px-3 py-1 border border-slate-200 hover:bg-slate-50 rounded text-sm text-slate-600">2</button>
+            <button class="px-3 py-1 border border-slate-200 hover:bg-slate-50 rounded text-sm text-slate-600">Next</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>

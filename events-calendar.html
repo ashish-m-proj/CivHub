@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivHub — Events Calendar</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+            sidebar: '#0f172a' 
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex h-screen overflow-hidden text-sm">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-sidebar flex flex-col justify-between hidden md:flex z-20 shrink-0">
+    <div>
+      <!-- Logo -->
+      <div class="h-16 flex items-center px-6 border-b border-slate-800">
+        <div class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center font-bold text-sm mr-3">
+          <i class="fas fa-building-columns"></i>
+        </div>
+        <span class="font-bold text-lg text-white tracking-tight">CivHub</span>
+      </div>
+      
+      <!-- Nav Links -->
+      <div class="px-4 py-6 space-y-1">
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+        
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-chart-pie w-5 text-center"></i> Overview
+        </a>
+        <a href="study-materials.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-book-open w-5 text-center"></i> Study Materials
+        </a>
+        <a href="campus-clubs.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-users w-5 text-center"></i> Campus Clubs
+        </a>
+        <!-- Active Tab -->
+        <a href="events-calendar.html" class="flex items-center gap-3 px-3 py-2 bg-brand-600 text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-calendar-alt w-5 text-center"></i> Events Calendar
+        </a>
+
+        <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Personal</p>
+        
+        <a href="my-uploads.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-cloud-upload-alt w-5 text-center"></i> My Uploads
+        </a>
+        <a href="saved-resources.html" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-bookmark w-5 text-center"></i> Saved Resources
+        </a>
+      </div>
+    </div>
+
+    <!-- User Profile Snippet -->
+    <div class="p-4 border-t border-slate-800">
+      <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-xs">
+          AK
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-white truncate">Ashish Kumar</p>
+          <p class="text-xs text-slate-400 truncate">ashish_k@ce.iitr.ac.in</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+    
+    <!-- Top Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30 shrink-0">
+      <!-- Breadcrumbs -->
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-slate-400">Pages</span>
+        <span class="text-slate-400">/</span>
+        <span class="font-medium text-slate-900">Events Calendar</span>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <button class="relative text-slate-500 hover:text-slate-700 transition-colors p-2">
+          <i class="fas fa-bell"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 border-2 border-white"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="p-8 max-w-7xl mx-auto w-full space-y-6">
+      
+      <!-- Page Header & Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Department Schedule</h1>
+          <p class="text-slate-500 mt-1">Track exams, guest lectures, club meetings, and submissions.</p>
+        </div>
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-colors">
+            Sync to Google Calendar
+          </button>
+          <!-- Only BR/CR might see this active, but keeping for UI -->
+          <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+            <i class="fas fa-plus text-xs"></i> Schedule Event
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- LEFT: Calendar Area (Spans 3 cols) -->
+        <div class="lg:col-span-3 space-y-4">
+          
+          <!-- Calendar Controls -->
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+            
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-1">
+                <button class="w-8 h-8 rounded hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors">
+                  <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                <button class="w-8 h-8 rounded hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors">
+                  <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+              </div>
+              <h2 class="text-lg font-bold text-slate-900 w-32">August 2026</h2>
+              <button class="px-3 py-1 bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold rounded transition-colors">Today</button>
+            </div>
+
+            <!-- View Toggles & Filters -->
+            <div class="flex items-center gap-3">
+              <div class="flex bg-slate-100 p-1 rounded-lg">
+                <button class="px-4 py-1 bg-white text-slate-800 font-medium rounded shadow-sm text-sm transition-all">Month</button>
+                <button class="px-4 py-1 text-slate-500 hover:text-slate-700 font-medium rounded text-sm transition-all">Week</button>
+              </div>
+              <button class="px-3 py-1.5 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg text-sm flex items-center gap-2 font-medium transition-colors">
+                <i class="fas fa-filter text-xs"></i> Filter
+              </button>
+            </div>
+
+          </div>
+
+          <!-- The Calendar Grid -->
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <!-- Days Header -->
+            <div class="grid grid-cols-7 border-b border-slate-200 bg-slate-50">
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Sun</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Mon</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Tue</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Wed</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Thu</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide border-r border-slate-200">Fri</div>
+              <div class="py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Sat</div>
+            </div>
+
+            <!-- Calendar Cells -->
+            <!-- Using grid with gap-px and a slate background creates crisp 1px borders for all cells -->
+            <div class="grid grid-cols-7 auto-rows-[120px] bg-slate-200 gap-px flex-1">
+              
+              <!-- Previous Month Days -->
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">26</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">27</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">28</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">29</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">30</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">31</span>
+              </div>
+              
+              <!-- Current Month Days -->
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">1</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">2</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">3</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">4</span>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">5</span>
+                <!-- Event Chip (Academic) -->
+                <div class="bg-rose-50 border border-rose-100 text-rose-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate" title="Mid-Term Exams Begin">
+                  <i class="fas fa-file-signature mr-1"></i> Mid-Terms Begin
+                </div>
+              </div>
+
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">6</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">7</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">8</span>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">9</span>
+                <!-- Event Chip (Club) -->
+                <div class="bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-users mr-1"></i> CESS Meet
+                </div>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">10</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">11</span>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">12</span>
+                <!-- Event Chip (Deadline) -->
+                <div class="bg-amber-50 border border-amber-100 text-amber-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-clock mr-1"></i> Geotech Assign...
+                </div>
+              </div>
+
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">13</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">14</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">15</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">16</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">17</span>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">18</span>
+                <div class="bg-brand-50 border border-brand-100 text-brand-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-chalkboard-teacher mr-1"></i> Guest Lecture
+                </div>
+              </div>
+
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">19</span>
+              </div>
+              
+              <!-- CURRENT DAY HIGHLIGHT -->
+              <div class="bg-brand-50/30 p-2 flex flex-col hover:bg-brand-50/50 transition-colors group cursor-pointer relative border-2 border-brand-500 shadow-inner">
+                <div class="flex justify-end mb-1">
+                  <span class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold">20</span>
+                </div>
+                <!-- Event Chip -->
+                <div class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-laptop-code mr-1"></i> AutoCAD Workshop
+                </div>
+                <div class="bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-users mr-1"></i> Concrete Canoe
+                </div>
+              </div>
+
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">21</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">22</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">23</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">24</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">25</span>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">26</span>
+                <div class="bg-amber-50 border border-amber-100 text-amber-700 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate">
+                  <i class="fas fa-flask mr-1"></i> Lab Record Due
+                </div>
+              </div>
+              
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">27</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">28</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">29</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">30</span>
+              </div>
+              <div class="bg-white p-2 flex flex-col hover:bg-slate-50 transition-colors group cursor-pointer relative">
+                <span class="text-xs font-medium text-slate-600 mb-1 text-right">31</span>
+              </div>
+
+              <!-- Next Month Placeholder -->
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">1</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">2</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">3</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">4</span>
+              </div>
+              <div class="bg-slate-50 p-2 opacity-50 flex flex-col">
+                <span class="text-xs font-medium text-slate-400 mb-1 text-right">5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Upcoming Agenda Sidebar -->
+        <div class="space-y-6">
+          
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm h-full flex flex-col">
+            <div class="px-5 py-4 border-b border-slate-200">
+              <h2 class="font-bold text-slate-900">Upcoming Agenda</h2>
+              <p class="text-xs text-slate-500 mt-1">Next 7 days</p>
+            </div>
+            
+            <div class="p-5 space-y-6 flex-1">
+              
+              <!-- Agenda Item 1 -->
+              <div class="relative pl-4 border-l-2 border-emerald-500">
+                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white border-2 border-emerald-500"></div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Today, 5:00 PM</p>
+                <h3 class="font-bold text-slate-900">AutoCAD 3D Modeling Workshop</h3>
+                <p class="text-sm text-slate-500 mt-1">Computer Lab 2</p>
+                <div class="mt-2 inline-block bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded text-xs font-medium border border-emerald-100">Technical</div>
+              </div>
+
+              <!-- Agenda Item 2 -->
+              <div class="relative pl-4 border-l-2 border-purple-500">
+                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white border-2 border-purple-500"></div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Today, 6:30 PM</p>
+                <h3 class="font-bold text-slate-900">Concrete Canoe Team Meet</h3>
+                <p class="text-sm text-slate-500 mt-1">Structures Lab</p>
+                <div class="mt-2 inline-block bg-purple-50 text-purple-700 px-2 py-0.5 rounded text-xs font-medium border border-purple-100">Club Meeting</div>
+              </div>
+
+              <!-- Agenda Item 3 -->
+              <div class="relative pl-4 border-l-2 border-amber-500">
+                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white border-2 border-amber-500"></div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Aug 26, 11:59 PM</p>
+                <h3 class="font-bold text-slate-900">Surveying Lab Record Due</h3>
+                <p class="text-sm text-slate-500 mt-1">Submit to Prof. Sharma's Office</p>
+                <div class="mt-2 inline-block bg-amber-50 text-amber-700 px-2 py-0.5 rounded text-xs font-medium border border-amber-100">Deadline</div>
+              </div>
+
+            </div>
+            
+            <!-- Quick Key/Legend -->
+            <div class="border-t border-slate-100 p-4 bg-slate-50 rounded-b-xl">
+              <h4 class="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Legend</h4>
+              <div class="flex flex-wrap gap-2">
+                <span class="flex items-center gap-1.5 text-xs text-slate-600"><div class="w-2 h-2 rounded-full bg-brand-500"></div> Academic</span>
+                <span class="flex items-center gap-1.5 text-xs text-slate-600"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Workshop</span>
+                <span class="flex items-center gap-1.5 text-xs text-slate-600"><div class="w-2 h-2 rounded-full bg-purple-500"></div> Club</span>
+                <span class="flex items-center gap-1.5 text-xs text-slate-600"><div class="w-2 h-2 rounded-full bg-amber-500"></div> Deadline</span>
+                <span class="flex items-center gap-1.5 text-xs text-slate-600"><div class="w-2 h-2 rounded-full bg-rose-500"></div> Exams</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+</body>
+</html>
