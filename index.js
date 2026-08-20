@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ==========================================
 // 1. FIREBASE SETUP
@@ -137,6 +138,9 @@ function switchView(targetId, title) {
       link.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
     }
   });
+  if (targetId === 'view-study') {
+    loadStudyMaterials();
+  }
 }
 
 // Attach click listeners to all sidebar links
@@ -150,3 +154,58 @@ navLinks.forEach(link => {
     switchView(target, title);
   });
 });
+
+// ==========================================
+// 6. DYNAMIC DATA RENDERING (FIRESTORE)
+// ==========================================
+
+// Function to fetch and display Study Materials
+async function loadStudyMaterials() {
+  const tbody = document.getElementById('study-materials-tbody');
+  if (!tbody) return;
+
+  try {
+    // Fetch data from the 'studyMaterials' collection in Firestore
+    const querySnapshot = await getDocs(collection(db, "studyMaterials"));
+    
+    // Clear the "Loading..." message
+    tbody.innerHTML = '';
+
+    if (querySnapshot.empty) {
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500">No materials found.</td></tr>`;
+      return;
+    }
+
+    // Loop through each document and build the HTML row
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      
+      const row = `
+        <tr class="hover:bg-slate-50 group transition-colors">
+          <td class="px-6 py-4 flex items-center gap-3">
+            <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+            <div>
+              <p class="font-bold text-slate-900 cursor-pointer group-hover:text-brand-600">${data.name}</p>
+            </div>
+          </td>
+          <td class="px-6 py-4">${data.subject}</td>
+          <td class="px-6 py-4">
+            <span class="bg-slate-100 px-2.5 py-1 rounded-md text-xs border">${data.type}</span>
+          </td>
+          <td class="px-6 py-4">${data.uploader}</td>
+          <td class="px-6 py-4">${data.date}</td>
+          <td class="px-6 py-4 text-right">
+            <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="text-slate-400 hover:text-brand-600 transition-colors"><i class="fas fa-download text-lg"></i></button>
+            </div>
+          </td>
+        </tr>
+      `;
+      tbody.innerHTML += row;
+    });
+
+  } catch (error) {
+    console.error("Error loading study materials:", error);
+    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-rose-500">Failed to load data.</td></tr>`;
+  }
+}
