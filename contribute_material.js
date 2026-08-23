@@ -25,7 +25,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Your Google Apps Script Web App URL
-const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/a/macros/ce.iitr.ac.in/s/AKfycbyJsrzqJhRVo0Q8bRna0OIYjhN6c62WGLuezmAeBpGSv9zLXG-jctz0VDQR1DMbe-0beg/exec";
+const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJsrzqJhRVo0Q8bRna0OIYjhN6c62WGLuezmAeBpGSv9zLXG-jctz0VDQR1DMbe-0beg/exec";
 
 // ==========================================
 // 2. THEME TOGGLE LOGIC
@@ -112,6 +112,26 @@ dropZone.addEventListener('drop', function(e) {
   }
 });
 
+// Handle the actual file drop (This should already be here from earlier)
+dropZone.addEventListener('drop', function(e) {
+  const dt = e.dataTransfer;
+  const files = dt.files;
+
+  if (files.length > 0) {
+    fileUpload.files = files;
+    fileUpload.dispatchEvent(new Event('change'));
+  }
+});
+
+// ADD THE NEW CLICK LISTENER HERE:
+// Trigger file selection when clicking anywhere inside the dashed drop zone
+dropZone.addEventListener('click', (e) => {
+  if (e.target.id !== 'file-upload') {
+    fileUpload.click();
+  }
+});
+
+
 // ==========================================
 // 4. FORM SUBMISSION (DRIVE + FIRESTORE)
 // ==========================================
@@ -130,18 +150,13 @@ document.getElementById('upload-form').addEventListener('submit', async function
   btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing Upload...`;
 
   try {
-    // 1. Get the Resumable Upload URL from Google Apps Script
-    // Note: We use 'text/plain' to avoid strict browser CORS blocking
-    const initResponse = await fetch(GOOGLE_SCRIPT_WEB_APP_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
-      body: JSON.stringify({
-        fileName: file.name,
-        mimeType: file.type
-      })
+    // 1. Get the Resumable Upload URL from Google Apps Script via GET
+    const params = new URLSearchParams({
+      fileName: file.name,
+      mimeType: file.type
     });
+
+    const initResponse = await fetch(`${GOOGLE_SCRIPT_WEB_APP_URL}?${params.toString()}`);
     
     const initResult = await initResponse.json();
     if (initResult.status !== "success") throw new Error("Failed to get upload ticket from Google.");
