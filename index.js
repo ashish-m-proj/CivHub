@@ -18,6 +18,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app); // <-- ADD THIS NEW LINE HERE
 const brcrEmails = ['admin@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iitr.ac.in'];
 
 // ==========================================
@@ -26,7 +27,7 @@ const brcrEmails = ['admin@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iit
 const mainBody = document.getElementById('main-body');
 const userProfileSection = document.getElementById('user-profile-section');
 const guestLoginSection = document.getElementById('guest-login-section');
-const headerLoginBtn = document.getElementById('header-login-btn');
+const contributorPoints = document.getElementById('contributor-points');
 
 // NEW: Header Profile Elements
 const headerUserProfile = document.getElementById('header-user-profile');
@@ -57,7 +58,7 @@ onAuthStateChanged(auth, (user) => {
     // Logged In
     userProfileSection.classList.remove('hidden');
     guestLoginSection.classList.add('hidden');
-    if (headerLoginBtn) headerLoginBtn.classList.add('hidden');
+    if (contributorPoints) contributorPoints.classList.remove('hidden');
     if (headerUserProfile) headerUserProfile.classList.remove('hidden'); // Show header profile
     
     const emailStr = user.email.toLowerCase();
@@ -87,7 +88,7 @@ onAuthStateChanged(auth, (user) => {
     // Guest View
     userProfileSection.classList.add('hidden');
     guestLoginSection.classList.remove('hidden');
-    if (headerLoginBtn) headerLoginBtn.classList.remove('hidden');
+    if (contributorPoints) contributorPoints.classList.add('hidden');
     if (headerUserProfile) headerUserProfile.classList.add('hidden'); // Hide header profile
     
     userRoleBadge.forEach(badge => {
@@ -181,22 +182,22 @@ async function loadStudyMaterials() {
       const data = doc.data();
       
       const row = `
-        <tr class="hover:bg-slate-50 group transition-colors">
+        <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] group transition-colors">
           <td class="px-6 py-4 flex items-center gap-3">
             <i class="fas fa-file-pdf text-red-500 text-xl"></i>
             <div>
-              <p class="font-bold text-slate-900 cursor-pointer group-hover:text-brand-600">${data.name}</p>
+              <p class="font-bold text-slate-900 dark:text-slate-100 cursor-pointer group-hover:text-brand-600 dark:group-hover:text-brand-400">${data.name}</p>
             </div>
           </td>
-          <td class="px-6 py-4">${data.subject}</td>
+          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.subject}</td>
           <td class="px-6 py-4">
-            <span class="bg-slate-100 px-2.5 py-1 rounded-md text-xs border">${data.type}</span>
+            <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs border dark:border-white/5">${data.type}</span>
           </td>
-          <td class="px-6 py-4">${data.uploader}</td>
-          <td class="px-6 py-4">${data.date}</td>
+          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.uploader}</td>
+          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.date}</td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button class="text-slate-400 hover:text-brand-600 transition-colors"><i class="fas fa-download text-lg"></i></button>
+              <button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button>
             </div>
           </td>
         </tr>
@@ -209,3 +210,42 @@ async function loadStudyMaterials() {
     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-rose-500">Failed to load data.</td></tr>`;
   }
 }
+
+// Theme Toggle Logic
+const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+const themeToggleBtn = document.getElementById('theme-toggle');
+
+// Change the icons inside the button based on previous settings
+if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    themeToggleLightIcon.classList.remove('hidden');
+    document.documentElement.classList.add('dark');
+} else {
+    themeToggleDarkIcon.classList.remove('hidden');
+}
+
+themeToggleBtn.addEventListener('click', function() {
+    // Toggle icons inside button
+    themeToggleDarkIcon.classList.toggle('hidden');
+    themeToggleLightIcon.classList.toggle('hidden');
+
+    // If set via local storage previously
+    if (localStorage.getItem('color-theme')) {
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('color-theme', 'light');
+        }
+    } else {
+        // If not in local storage
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('color-theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        }
+    }
+});
