@@ -104,11 +104,7 @@
           <i class="fas fa-star text-amber-400 dark:text-amber-300"></i>
           <span>240 Pts</span>
         </div>        
-        <!-- Header User Profile (Visible to logged-in users) -->
-        <div id="header-user-profile" class="hidden flex items-center gap-2 cursor-pointer">
-          <span id="header-user-name" class="font-medium text-slate-700 hidden sm:block text-sm">User</span>
-          <div id="header-user-avatar" class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center font-bold text-white text-xs uppercase shadow-sm">U</div>
-        </div>
+        
 
         <!-- Theme Toggle Button -->
         <button id="theme-toggle" class="relative text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-[#d8b4fe] transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2b1045] flex items-center justify-center">
@@ -148,9 +144,9 @@
         </div>
         <div class="flex gap-3">
           <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-colors">View Analytics</button>
-          <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+          <a href="contribute_material.html" class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2 cursor-pointer">
             <i class="fas fa-plus text-xs"></i> Contribute Material
-          </button>
+          </a>
         </div>
       </div>
 
@@ -160,15 +156,15 @@
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Available Materials</p>
             <div class="p-1.5 bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg"><i class="fas fa-book"></i></div>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">1,284</h3>
-          <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-2 font-medium"><i class="fas fa-arrow-up"></i> 12 new this week</p>
+          <h3 id="dash-stat-materials" class="text-2xl font-bold text-slate-900 dark:text-white">...</h3>
+          <p id="dash-stat-materials-trend" class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Loading data...</p>
         </div>
         <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors">
           <div class="flex justify-between items-start mb-2">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Active Clubs</p>
             <div class="p-1.5 bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-lg"><i class="fas fa-users"></i></div>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">8</h3>
+          <h3 id="dash-stat-clubs" class="text-2xl font-bold text-slate-900 dark:text-white">...</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Across all departments</p>
         </div>
         <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors">
@@ -176,7 +172,7 @@
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Upcoming Events</p>
             <div class="p-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-lg"><i class="fas fa-calendar-day"></i></div>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">3</h3>
+          <h3 id="dash-stat-events" class="text-2xl font-bold text-slate-900 dark:text-white">...</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">In the next 7 days</p>
         </div>
         <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm border-l-4 border-l-brand-500 transition-colors">
@@ -184,8 +180,8 @@
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Contributor Points</p>
             <div class="p-1.5 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-lg"><i class="fas fa-award"></i></div>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">240</h3>
-          <p class="text-xs text-brand-600 dark:text-brand-400 mt-2 font-medium">Top 15% of your batch</p>
+          <h3 id="dash-stat-points" class="text-2xl font-bold text-slate-900 dark:text-white">...</h3>
+          <p id="dash-stat-points-trend" class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium">Loading ranking...</p>
         </div>
       </div>
 
@@ -216,18 +212,11 @@
                 <thead class="bg-slate-50 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 font-medium border-b border-slate-200 dark:border-white/10">
                   <tr><th class="px-6 py-3 font-medium">Document Name</th><th class="px-6 py-3 font-medium">Subject</th><th class="px-6 py-3 font-medium">Type</th><th class="px-6 py-3 font-medium">Date</th></tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-                  <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer">
-                    <td class="px-6 py-3 flex items-center gap-3"><i class="fas fa-file-pdf text-red-500 text-lg"></i><span class="font-medium text-slate-900 dark:text-slate-100">Fluid Mechanics Unit 2 Notes</span></td>
-                    <td class="px-6 py-3">Fluid Mechanics</td><td class="px-6 py-3"><span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">Handwritten</span></td><td class="px-6 py-3 text-slate-400 dark:text-slate-500">Today</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer">
-                    <td class="px-6 py-3 flex items-center gap-3"><i class="fas fa-file-alt text-blue-500 text-lg"></i><span class="font-medium text-slate-900 dark:text-slate-100">Structural Analysis PYQs (2020-25)</span></td>
-                    <td class="px-6 py-3">Structural Analysis</td><td class="px-6 py-3"><span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">PYQ</span></td><td class="px-6 py-3 text-slate-400 dark:text-slate-500">Yesterday</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer">
-                    <td class="px-6 py-3 flex items-center gap-3"><i class="fas fa-file-excel text-green-500 text-lg"></i><span class="font-medium text-slate-900 dark:text-slate-100">Surveying Lab Data Sheet</span></td>
-                    <td class="px-6 py-3">Surveying</td><td class="px-6 py-3"><span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">Lab Manual</span></td><td class="px-6 py-3 text-slate-400 dark:text-slate-500">Aug 14</td>
+                <tbody id="dash-recent-materials-tbody" class="divide-y divide-slate-100 dark:divide-white/5">
+                  <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-slate-400 dark:text-slate-500">
+                      <i class="fas fa-spinner fa-spin mr-2"></i> Loading recent materials...
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -240,40 +229,25 @@
         <!-- Tabs Header -->
         <div class="flex border-b border-slate-200 dark:border-[#3b0764]">
           <button id="tab-btn-announcements" onclick="switchTab('announcements')" class="flex-1 py-3 px-4 text-sm font-bold text-purple-700 dark:text-[#d8b4fe] border-b-2 border-purple-600 dark:border-[#a855f7] bg-purple-50 dark:bg-[#2b1045] transition-all">
-            Announcements <span class="ml-1 bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 text-[10px] px-1.5 py-0.5 rounded-full">3</span>
+            Announcements <span id="dash-announcements-badge" class="ml-1 bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
           </button>
           <button id="tab-btn-events" onclick="switchTab('events')" class="flex-1 py-3 px-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all border-b-2 border-transparent">
-            Upcoming Events
+            Upcoming Events <span id="dash-events-badge" class="ml-1 bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
           </button>
         </div>
 
-        <!-- Tab Content: Announcements (Keep existing content inside) -->
+        <!-- Tab Content: Announcements -->
         <div id="tab-content-announcements" class="p-5 space-y-5 block">
-          <div class="flex gap-4 items-start">
-            <div class="w-2 h-2 rounded-full bg-brand-500 dark:bg-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.8)] mt-1.5 shrink-0"></div>
-            <div>
-              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100 leading-tight">ASCE Guest Lecture Series</p>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Join us tomorrow at 5:00 PM for an industry session.</p>
-              <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium">2 hours ago</p>
-            </div>
+          <div class="text-center py-6 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Loading announcements...
           </div>
-          <!-- Add other announcements here with dark:text classes applied -->
         </div>
 
         <!-- Tab Content: Events -->
         <div id="tab-content-events" class="p-5 space-y-5 hidden">
-          <div class="flex gap-4 items-start">
-            <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] mt-1.5 shrink-0"></div>
-            <div>
-              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100 leading-tight">AutoCAD Workshop</p>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Computer Lab 2 • Limited seats available.</p>
-              <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-2 font-bold">Today, 5:00 PM</p>
-            </div>
+          <div class="text-center py-6 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Loading events...
           </div>
-        </div>
-        
-        <div class="border-t border-slate-100 dark:border-[#3b0764] p-3 text-center bg-slate-50 dark:bg-[#0f0a18]">
-          <button class="text-sm font-medium text-brand-600 dark:text-[#a855f7] hover:text-brand-700 dark:hover:text-[#d8b4fe] transition-colors">View All Activity</button>
         </div>
       </div>
     </div>
@@ -301,7 +275,17 @@
             <option>All Semesters</option><option selected>4th Semester</option><option>3rd Semester</option>
           </select>
           <select class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-brand-500 block py-2 px-3 outline-none">
-            <option>All Subjects</option><option>Fluid Mechanics</option><option>Structural Analysis</option><option>Geotech Engineering</option><option>Surveying</option>
+            <option>All Subjects</option>
+            <option>Geospatial Engineering</option>
+            <option>Fluid Mechanics</option>
+            <option>Solid Mechanics</option>
+            <option>Structural Analysis</option>
+            <option>Water Supply Engineering</option>
+            <option>Design of Reinforced Concrete</option>
+            <option>Soil Mechanics</option>
+            <option>Highway and Traffic Engineering</option>
+            <option>Design of Steel Elements</option>
+            <option>Foundation Engineering</option>
           </select>
           <select class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-brand-500 block py-2 px-3 outline-none">
             <option>All Types</option><option>PYQs (Previous Papers)</option><option>Handwritten Notes</option><option>Lab Manuals</option>

@@ -160,92 +160,102 @@ navLinks.forEach(link => {
 // 6. DYNAMIC DATA RENDERING (FIRESTORE)
 // ==========================================
 
-// Function to fetch and display Study Materials
 async function loadStudyMaterials() {
-  const tbody = document.getElementById('study-materials-tbody');
-  if (!tbody) return;
+  const studyTbody = document.getElementById('study-materials-tbody');
+  const dashRecentTbody = document.getElementById('dash-recent-materials-tbody');
+  const dashStatMaterials = document.getElementById('dash-stat-materials');
+  const dashStatMaterialsTrend = document.getElementById('dash-stat-materials-trend');
+  
+  if (!studyTbody && !dashRecentTbody) return;
 
   try {
-    // Fetch data from the 'studyMaterials' collection in Firestore
     const querySnapshot = await getDocs(collection(db, "studyMaterials"));
+    const materials = [];
     
-    // Clear the "Loading..." message
-    tbody.innerHTML = '';
+    querySnapshot.forEach((doc) => {
+      materials.push({ id: doc.id, ...doc.data() });
+    });
 
-    if (querySnapshot.empty) {
-      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500">No materials found.</td></tr>`;
-      return;
+    // Sort by timestamp descending (newest first)
+    materials.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    // 1. Update Dashboard Stats
+    if (dashStatMaterials) {
+      dashStatMaterials.innerText = materials.length;
+      if (dashStatMaterialsTrend) {
+        dashStatMaterialsTrend.innerHTML = `<i class="fas fa-check-circle text-emerald-500"></i> Verified resources online`;
+      }
     }
 
-    // Loop through each document and build the HTML row
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      
-      const row = `
-        <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] group transition-colors">
-          <td class="px-6 py-4 flex items-center gap-3">
-            <i class="fas fa-file-pdf text-red-500 text-xl"></i>
-            <div>
-              <p class="font-bold text-slate-900 dark:text-slate-100 cursor-pointer group-hover:text-brand-600 dark:group-hover:text-brand-400">${data.name}</p>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.subject}</td>
-          <td class="px-6 py-4">
-            <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs border dark:border-white/5">${data.type}</span>
-          </td>
-          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.uploader}</td>
-          <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.date}</td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button>
-            </div>
-          </td>
-        </tr>
-      `;
-      tbody.innerHTML += row;
-    });
+    // 2. Update Dashboard Recent Materials Table (Top 5)
+    if (dashRecentTbody) {
+      dashRecentTbody.innerHTML = '';
+      if (materials.length === 0) {
+        dashRecentTbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 dark:text-slate-500">No materials uploaded yet.</td></tr>`;
+      } else {
+        const recentItems = materials.slice(0, 5);
+        recentItems.forEach((data) => {
+          const fileUrl = data.fileUrl || '#';
+          dashRecentTbody.innerHTML += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors">
+              <td class="px-6 py-3 flex items-center gap-3">
+                <i class="fas fa-file-pdf text-red-500 text-lg"></i>
+                <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="font-medium text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${data.name || 'Untitled Document'}</a>
+              </td>
+              <td class="px-6 py-3 text-slate-600 dark:text-slate-300">${data.subject || 'General'}</td>
+              <td class="px-6 py-3">
+                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">${data.type || 'Resource'}</span>
+              </td>
+              <td class="px-6 py-3 text-slate-400 dark:text-slate-500">${data.date || 'Recent'}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    // 3. Update Study Materials Directory Table (All Items)
+    if (studyTbody) {
+      studyTbody.innerHTML = '';
+      if (materials.length === 0) {
+        studyTbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400 dark:text-slate-500">No materials found.</td></tr>`;
+      } else {
+        materials.forEach((data) => {
+          const fileUrl = data.fileUrl || '#';
+          studyTbody.innerHTML += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] group transition-colors">
+              <td class="px-6 py-4 flex items-center gap-3">
+                <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+                <div>
+                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="font-bold text-slate-900 dark:text-slate-100 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${data.name || 'Untitled Document'}</a>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.subject || 'General'}</td>
+              <td class="px-6 py-4">
+                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs border dark:border-white/5">${data.type || 'Resource'}</span>
+              </td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.uploader || 'Anonymous'}</td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.date || 'Today'}</td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-500/30 text-xs font-semibold transition-colors">
+                    <i class="fas fa-arrow-up-right-from-square"></i> Open
+                  </a>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      }
+    }
 
   } catch (error) {
     console.error("Error loading study materials:", error);
-    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-rose-500">Failed to load data.</td></tr>`;
+    if (studyTbody) studyTbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-rose-500">Failed to load data.</td></tr>`;
+    if (dashRecentTbody) dashRecentTbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-rose-500">Failed to load data.</td></tr>`;
   }
 }
 
-// Theme Toggle Logic
-const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-const themeToggleBtn = document.getElementById('theme-toggle');
-
-// Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-    document.documentElement.classList.add('dark');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
-
-themeToggleBtn.addEventListener('click', function() {
-    // Toggle icons inside button
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    // If set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-    } else {
-        // If not in local storage
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    }
+// Ensure the data loads as soon as the Dashboard overview is visible
+document.addEventListener("DOMContentLoaded", () => {
+  loadStudyMaterials();
 });

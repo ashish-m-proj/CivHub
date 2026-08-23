@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contribute Material — CivHub</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+            sidebar: '#0f172a' 
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:text-slate-200 dark:bg-slate-950 dark:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] dark:from-purple-900/40 dark:via-[#0f0a18] dark:to-[#020617] antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+  <!-- Minimal Header -->
+  <header class="h-16 bg-white dark:bg-white/[0.02] dark:backdrop-blur-3xl border-b border-slate-200 dark:border-white/10 flex items-center justify-between px-8 sticky top-0 z-30 shrink-0 transition-colors">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="w-8 h-8 rounded bg-brand-600 text-white flex items-center justify-center font-bold text-sm hover:bg-brand-700 transition-colors">
+        <i class="fas fa-building-columns"></i>
+      </a>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <a href="index.html" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">Dashboard</a>
+        <span class="text-slate-400">/</span>
+        <span class="font-medium text-slate-900 dark:text-white">Contribute Material</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors mr-2">
+        <i class="fas fa-arrow-left mr-1"></i> Back to Hub
+      </a>
+      
+      <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button id="theme-toggle" class="relative text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-[#d8b4fe] transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2b1045] flex items-center justify-center">
+        <!-- Dark Mode Toggle Icon -->
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 transition-transform duration-300 hover:-rotate-12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+        <!-- Light Mode Toggle Icon -->
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 transition-transform duration-500 hover:rotate-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto p-6 flex justify-center">
+    <div class="w-full max-w-3xl py-8">
+      
+      <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Contribute Study Material</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2">Upload your notes, PYQs, or manuals to help your batchmates. Earn contributor points for approved resources.</p>
+      </div>
+
+      <!-- Upload Form Card -->
+      <form id="upload-form" class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden transition-colors">
+        
+        <div class="p-8 space-y-6">
+          
+          <!-- File Drag and Drop Zone -->
+          <div class="col-span-full">
+            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Resource File <span class="text-rose-500">*</span></label>
+            <div id="drop-zone" class="mt-2 flex justify-center rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 px-6 py-12 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer relative group">
+              <div class="text-center">
+                <div class="mx-auto h-16 w-16 text-brand-500 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/20 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                </div>
+                <div class="mt-4 flex justify-center text-sm leading-6 text-slate-600 dark:text-slate-300">
+                  <span class="relative cursor-pointer rounded-md font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500">
+                    <span>Upload a file</span>
+                    <input id="file-upload" name="file-upload" type="file" class="sr-only" required>
+                  </span>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs leading-5 text-slate-500 dark:text-slate-400 mt-1">PDF, DOCX, XLSX, or Images up to 20MB</p>
+                
+                <!-- Display selected file name dynamically -->
+                <div id="file-name-display" class="hidden mt-4 inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-lg text-sm font-medium border border-emerald-200 dark:border-emerald-500/30">
+                  <i class="fas fa-check-circle"></i> <span id="file-name-text">filename.pdf</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Document Name -->
+            <div class="col-span-full">
+              <label for="doc-name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Document Title <span class="text-rose-500">*</span></label>
+              <input type="text" id="doc-name" placeholder="e.g., Fluid Mechanics Unit 2 Notes" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white dark:placeholder-slate-500 transition-shadow" required>
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label for="subject" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject <span class="text-rose-500">*</span></label>
+              <select id="subject" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
+                <option value="" disabled selected>Select subject</option>
+                <option>Fluid Mechanics</option>
+                <option>Structural Analysis</option>
+                <option>Geotech Engineering</option>
+                <option>Surveying II</option>
+                <option>Engineering Math III</option>
+              </select>
+            </div>
+
+            <!-- Semester -->
+            <div>
+              <label for="semester" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Semester <span class="text-rose-500">*</span></label>
+              <select id="semester" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
+                <option value="" disabled selected>Select semester</option>
+                <option>3rd Semester (Autumn)</option>
+                <option>4th Semester (Spring)</option>
+                <option>5th Semester (Autumn)</option>
+                <option>6th Semester (Spring)</option>
+              </select>
+            </div>
+
+            <!-- Material Type -->
+            <div>
+              <label for="type" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Resource Type <span class="text-rose-500">*</span></label>
+              <select id="type" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
+                <option value="" disabled selected>Select material type</option>
+                <option>Handwritten Notes</option>
+                <option>PYQ (Previous Year Question)</option>
+                <option>Lab Manual / Record</option>
+                <option>Class Presentation</option>
+                <option>Reference Book</option>
+              </select>
+            </div>
+            
+            <!-- Author Credit -->
+            <div>
+              <label for="author" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Author / Contributor <span class="text-slate-400 dark:text-slate-500 font-normal">(Optional)</span></label>
+              <input type="text" id="author" placeholder="Leave blank to submit anonymously" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white dark:placeholder-slate-500 transition-shadow">
+            </div>
+          </div>
+          
+          <!-- Notice -->
+          <div class="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-xl p-4 flex gap-3">
+            <i class="fas fa-info-circle text-blue-500 dark:text-blue-400 mt-0.5"></i>
+            <p class="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
+              All submissions go through a brief moderation phase by the BRs to prevent duplicates and ensure quality. Approved submissions will earn you <strong>15 Contributor Points</strong>.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Form Actions -->
+        <div class="px-8 py-5 bg-slate-50 dark:bg-[#0f0a18]/80 border-t border-slate-200 dark:border-white/10 flex items-center justify-end gap-3 transition-colors">
+          <a href="index.html" class="px-5 py-2.5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm">Cancel</a>
+          <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2">
+            Submit for Review <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="contribute_material.js"></script>
+</body>
+</html>
