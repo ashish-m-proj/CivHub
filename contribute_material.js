@@ -147,57 +147,60 @@ document.getElementById('upload-form').addEventListener('submit', async function
   const btn = this.querySelector('button[type="submit"]');
   const originalBtnText = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing Upload...`;
+  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Reading File...`;
 
   try {
-    // 1. Get the Resumable Upload URL from Google Apps Script via GET
-    const params = new URLSearchParams({
-      fileName: file.name,
-      mimeType: file.type
-    });
-
-    const initResponse = await fetch(`${GOOGLE_SCRIPT_WEB_APP_URL}?${params.toString()}`);
+    // 1. Convert file to Base64 Text
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
     
-    const initResult = await initResponse.json();
-    if (initResult.status !== "success") throw new Error("Failed to get upload ticket from Google.");
+    reader.onload = async function() {
+      // Strip out the data URL prefix (e.g., "data:application/pdf;base64,")
+      const base64String = reader.result.split(',')[1];
+      
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading to Drive...`;
+      
+      // 2. Send to Google Apps Script as a standard POST request
+      const uploadResponse = await fetch(GOOGLE_SCRIPT_WEB_APP_URL, {
+        method: 'POST',
+        // Sending as plain text bypasses strict CORS preflight blocking
+        body: JSON.stringify({
+          fileName: file.name,
+          mimeType: file.type,
+          base64: base64String
+        })
+      });
+      
+      const uploadResult = await uploadResponse.json();
+      if (uploadResult.status !== "success") throw new Error(uploadResult.message);
 
-    const uploadUrl = initResult.uploadUrl;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading to Drive...`;
+      // 3. Save the Document Details to Firebase
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving to Dashboard...`;
+      
+      const docData = {
+        name: document.getElementById('doc-name').value,
+        subject: document.getElementById('subject').value,
+        semester: document.getElementById('semester').value,
+        type: document.getElementById('type').value,
+        uploader: document.getElementById('author').value || (currentUser ? currentUser.email.split('@')[0] : "Student Contributor"),
+        fileUrl: uploadResult.fileUrl,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        timestamp: Date.now()
+      };
 
-    // 2. Upload the raw file directly to Google Drive
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file
-    });
+      await addDoc(collection(db, "studyMaterials"), docData);
 
-    if (!uploadResponse.ok) throw new Error("Direct upload failed.");
-
-    // Extract the newly created File ID from Google Drive's response
-    const fileMetadata = await uploadResponse.json();
-    const driveViewUrl = `https://drive.google.com/file/d/${fileMetadata.id}/view`;
-
-    // 3. Save the Document Details to Firebase
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving to Dashboard...`;
-    
-    const docData = {
-      name: document.getElementById('doc-name').value,
-      subject: document.getElementById('subject').value,
-      semester: document.getElementById('semester').value,
-      type: document.getElementById('type').value,
-      uploader: document.getElementById('author').value || (currentUser ? currentUser.email.split('@')[0] : "Student Contributor"),
-      fileUrl: driveViewUrl,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      timestamp: Date.now()
+      // 4. Success UI
+      btn.innerHTML = `<i class="fas fa-check"></i> Submitted Successfully!`;
+      btn.classList.replace('bg-brand-600', 'bg-emerald-600');
+      btn.classList.replace('hover:bg-brand-700', 'hover:bg-emerald-700');
+      
+      setTimeout(() => window.location.href = "index.html", 2000);
     };
-
-    await addDoc(collection(db, "studyMaterials"), docData);
-
-    // 4. Success UI
-    btn.innerHTML = `<i class="fas fa-check"></i> Submitted Successfully!`;
-    btn.classList.replace('bg-brand-600', 'bg-emerald-600');
-    btn.classList.replace('hover:bg-brand-700', 'hover:bg-emerald-700');
     
-    setTimeout(() => window.location.href = "index.html", 2000);
+    reader.onerror = function(error) {
+      throw new Error("Failed to read file.");
+    };
 
   } catch (error) {
     console.error("Upload failed:", error);
