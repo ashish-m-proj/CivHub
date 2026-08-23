@@ -83,12 +83,14 @@
                   <i class="fas fa-cloud-upload-alt text-2xl"></i>
                 </div>
                 <div class="mt-4 flex justify-center text-sm leading-6 text-slate-600 dark:text-slate-300">
-                  <span class="relative cursor-pointer rounded-md font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500">
-                    <span>Upload a file</span>
-                    <input id="file-upload" name="file-upload" type="file" class="sr-only" required>
-                  </span>
-                  <p class="pl-1">or drag and drop</p>
-                </div>
+                    <!-- Change the span below to a label -->
+                    <label class="relative cursor-pointer rounded-md font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500">
+                        <span>Upload a file</span>
+                        <input id="file-upload" name="file-upload" type="file" class="sr-only" required>
+                    </label>
+                    <!-- End of change -->
+                    <p class="pl-1">or drag and drop</p>
+                    </div>
                 <p class="text-xs leading-5 text-slate-500 dark:text-slate-400 mt-1">PDF, DOCX, XLSX, or Images up to 20MB</p>
                 
                 <!-- Display selected file name dynamically -->

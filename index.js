@@ -255,7 +255,7 @@ async function loadStudyMaterials() {
   }
 }
 
-// Ensure the data loads as soon as the Dashboard overview is visible
+// Automatically load data when Dashboard is ready
 document.addEventListener("DOMContentLoaded", () => {
   loadStudyMaterials();
 });
