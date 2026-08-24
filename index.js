@@ -5,7 +5,7 @@ import { initThemeToggle } from './theme-toggle.js';
 import { escapeHTML } from './utils.js';
 
 // brcrEmails is now UI-only — real admin gating lives in Firestore Rules (roles/{uid})
-const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iitr.ac.in'];
+const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'anushka_rv@ce.iitr.ac.in'];
 
 // ==========================================
 // 2. DOM ELEMENTS (Auth)
