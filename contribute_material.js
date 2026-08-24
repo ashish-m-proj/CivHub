@@ -1,68 +1,16 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { auth, db } from './firebase-init.js';
 
-// ==========================================
-// 1. CONFIGURATION & FIREBASE SETUP
-// ==========================================
-const firebaseConfig = {
-  apiKey: "AIzaSyCp8TJP11Zjr287DgInGo-V4nUyEarX0I4",
-  authDomain: "civhub-ee902.firebaseapp.com",
-  projectId: "civhub-ee902",
-  storageBucket: "civhub-ee902.firebasestorage.app",
-  messagingSenderId: "496685805070",
-  appId: "1:496685805070:web:738ef80145598b0c8c965f",
-  measurementId: "G-87Q29DEJ5R"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJsrzqJhRVo0Q8bRna0OIYjhN6c62WGLuezmAeBpGSv9zLXG-jctz0VDQR1DMbe-0beg/exec"; // get this after redeploying the hardened script below
 
 let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
 });
 
-// Your Google Apps Script Web App URL
-const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJsrzqJhRVo0Q8bRna0OIYjhN6c62WGLuezmAeBpGSv9zLXG-jctz0VDQR1DMbe-0beg/exec";
-
-// ==========================================
-// 2. THEME TOGGLE LOGIC
-// ==========================================
-const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-const themeToggleBtn = document.getElementById('theme-toggle');
-
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-    document.documentElement.classList.add('dark');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
-
-themeToggleBtn.addEventListener('click', function() {
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-    } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    }
-});
+import { initThemeToggle } from './theme-toggle.js';
+initThemeToggle();
 
 // ==========================================
 // 3. FILE UPLOAD UI LOGIC
@@ -132,73 +80,74 @@ dropZone.addEventListener('click', (e) => {
 });
 
 
-// ==========================================
-// 4. FORM SUBMISSION (DRIVE + FIRESTORE)
-// ==========================================
 document.getElementById('upload-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  
+
   const file = fileUpload.files[0];
   if (!file) {
     alert("Please select a file first.");
+    return;
+  }
+  if (!currentUser) {
+    alert("Please sign in before submitting.");
     return;
   }
 
   const btn = this.querySelector('button[type="submit"]');
   const originalBtnText = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Reading File...`;
 
-  try {
-    // 1. Convert file to Base64 Text
+    try {
+    const idToken = await currentUser.getIdToken();
+
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Reading File...`;
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    
+
     reader.onload = async function() {
-      // Strip out the data URL prefix (e.g., "data:application/pdf;base64,")
       const base64String = reader.result.split(',')[1];
-      
+
       btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading to Drive...`;
-      
-      // 2. Send to Google Apps Script as a standard POST request
+
       const uploadResponse = await fetch(GOOGLE_SCRIPT_WEB_APP_URL, {
         method: 'POST',
-        // Sending as plain text bypasses strict CORS preflight blocking
         body: JSON.stringify({
+          idToken,
           fileName: file.name,
           mimeType: file.type,
           base64: base64String
         })
       });
-      
+
       const uploadResult = await uploadResponse.json();
       if (uploadResult.status !== "success") throw new Error(uploadResult.message);
 
-      // 3. Save the Document Details to Firebase
       btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving to Dashboard...`;
-      
+
       const docData = {
         name: document.getElementById('doc-name').value,
         subject: document.getElementById('subject').value,
         semester: document.getElementById('semester').value,
         type: document.getElementById('type').value,
-        uploader: document.getElementById('author').value || (currentUser ? currentUser.email.split('@')[0] : "Student Contributor"),
+        uploader: document.getElementById('author').value || currentUser.email.split('@')[0],
+        uploaderUid: currentUser.uid,
         fileUrl: uploadResult.fileUrl,
+        status: "pending",
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         timestamp: Date.now()
       };
 
       await addDoc(collection(db, "studyMaterials"), docData);
 
-      // 4. Success UI
-      btn.innerHTML = `<i class="fas fa-check"></i> Submitted Successfully!`;
+      btn.innerHTML = `<i class="fas fa-check"></i> Submitted for Review!`;
       btn.classList.replace('bg-brand-600', 'bg-emerald-600');
       btn.classList.replace('hover:bg-brand-700', 'hover:bg-emerald-700');
-      
+
       setTimeout(() => window.location.href = "index.html", 2000);
     };
-    
-    reader.onerror = function(error) {
+
+    reader.onerror = function() {
       throw new Error("Failed to read file.");
     };
 

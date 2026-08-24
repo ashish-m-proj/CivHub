@@ -1,19 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCp8TJP11Zjr287DgInGo-V4nUyEarX0I4",
-  authDomain: "civhub-ee902.firebaseapp.com",
-  projectId: "civhub-ee902",
-  storageBucket: "civhub-ee902.firebasestorage.app",
-  messagingSenderId: "496685805070",
-  appId: "1:496685805070:web:738ef80145598b0c8c965f",
-  measurementId: "G-87Q29DEJ5R"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { auth } from './firebase-init.js';
 // Set up Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
 // Force Google UI to only allow your college domain

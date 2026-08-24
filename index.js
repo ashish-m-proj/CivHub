@@ -1,24 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { auth, db } from './firebase-init.js';
+import { initThemeToggle } from './theme-toggle.js';
+import { escapeHTML } from './utils.js';
 
-// ==========================================
-// 1. FIREBASE SETUP
-// ==========================================
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCp8TJP11Zjr287DgInGo-V4nUyEarX0I4",
-  authDomain: "civhub-ee902.firebaseapp.com",
-  projectId: "civhub-ee902",
-  storageBucket: "civhub-ee902.firebasestorage.app",
-  messagingSenderId: "496685805070",
-  appId: "1:496685805070:web:738ef80145598b0c8c965f",
-  measurementId: "G-87Q29DEJ5R"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app); // <-- ADD THIS NEW LINE HERE
+// brcrEmails is now UI-only — real admin gating lives in Firestore Rules (roles/{uid})
 const brcrEmails = ['admin@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iitr.ac.in'];
 
 // ==========================================
@@ -169,15 +155,17 @@ async function loadStudyMaterials() {
   if (!studyTbody && !dashRecentTbody) return;
 
   try {
-    const querySnapshot = await getDocs(collection(db, "studyMaterials"));
-    const materials = [];
-    
-    querySnapshot.forEach((doc) => {
-      materials.push({ id: doc.id, ...doc.data() });
-    });
+    const q = query(
+    collection(db, "studyMaterials"),
+    where("status", "==", "approved"),
+    orderBy("timestamp", "desc")
+  );
+  const querySnapshot = await getDocs(q);
+  const materials = [];
 
-    // Sort by timestamp descending (newest first)
-    materials.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  querySnapshot.forEach((doc) => {
+    materials.push({ id: doc.id, ...doc.data() });
+  });
 
     // 1. Update Dashboard Stats
     if (dashStatMaterials) {
@@ -200,13 +188,13 @@ async function loadStudyMaterials() {
             <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors">
               <td class="px-6 py-3 flex items-center gap-3">
                 <i class="fas fa-file-pdf text-red-500 text-lg"></i>
-                <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="font-medium text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${data.name || 'Untitled Document'}</a>
+                <a href="${escapeHTML(fileUrl)}" target="_blank" rel="noopener noreferrer" class="font-medium text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${escapeHTML(data.name) || 'Untitled Document'}</a>
               </td>
-              <td class="px-6 py-3 text-slate-600 dark:text-slate-300">${data.subject || 'General'}</td>
+              <td class="px-6 py-3 text-slate-600 dark:text-slate-300">${escapeHTML(data.subject) || 'General'}</td>
               <td class="px-6 py-3">
-                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">${data.type || 'Resource'}</span>
+                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md text-xs">${escapeHTML(data.type) || 'Resource'}</span>
               </td>
-              <td class="px-6 py-3 text-slate-400 dark:text-slate-500">${data.date || 'Recent'}</td>
+              <td class="px-6 py-3 text-slate-400 dark:text-slate-500">${escapeHTML(data.date) || 'Recent'}</td>
             </tr>
           `;
         });
@@ -226,18 +214,18 @@ async function loadStudyMaterials() {
               <td class="px-6 py-4 flex items-center gap-3">
                 <i class="fas fa-file-pdf text-red-500 text-xl"></i>
                 <div>
-                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="font-bold text-slate-900 dark:text-slate-100 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${data.name || 'Untitled Document'}</a>
+                  <a href="${escapeHTML(fileUrl)}" target="_blank" rel="noopener noreferrer" class="font-bold text-slate-900 dark:text-slate-100 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 transition-colors">${escapeHTML(data.name) || 'Untitled Document'}</a>
                 </div>
               </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.subject || 'General'}</td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${escapeHTML(data.subject) || 'General'}</td>
               <td class="px-6 py-4">
-                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs border dark:border-white/5">${data.type || 'Resource'}</span>
+                <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs border dark:border-white/5">${escapeHTML(data.type) || 'Resource'}</span>
               </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.uploader || 'Anonymous'}</td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${data.date || 'Today'}</td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${escapeHTML(data.uploader) || 'Anonymous'}</td>
+              <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${escapeHTML(data.date) || 'Today'}</td>
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-500/30 text-xs font-semibold transition-colors">
+                  <a href="${escapeHTML(fileUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-500/30 text-xs font-semibold transition-colors">
                     <i class="fas fa-arrow-up-right-from-square"></i> Open
                   </a>
                 </div>
@@ -260,39 +248,4 @@ document.addEventListener("DOMContentLoaded", () => {
   loadStudyMaterials();
 });
 
-// ==========================================
-// 7. THEME TOGGLE LOGIC
-// ==========================================
-const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-const themeToggleBtn = document.getElementById('theme-toggle');
-
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-    document.documentElement.classList.add('dark');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
-
-themeToggleBtn.addEventListener('click', function() {
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-    } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    }
-});
+initThemeToggle();
