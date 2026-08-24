@@ -77,7 +77,7 @@ onAuthStateChanged(auth, (user) => {
         // actual roles/{uid} collection that Firestore Rules also enforce.
         getDoc(doc(db, "roles", user.uid)).then((roleSnap) => {
           const isAdmin = roleSnap.exists() && roleSnap.data().role === "admin";
-          if (isAdmin) {
+          if (isAdmin || isBrcr) {
             moderationLink.classList.remove('hidden');
             moderationLink.classList.add('flex');
             adminSectionLabel.classList.remove('hidden');
@@ -261,9 +261,100 @@ async function loadStudyMaterials() {
   }
 }
 
+async function loadClubsCount() {
+  const el = document.getElementById('dash-stat-clubs');
+  if (!el) return;
+  try {
+    const snap = await getDocs(query(collection(db, "clubs"), where("active", "==", true)));
+    el.innerText = snap.size;
+  } catch (error) {
+    console.error("Error loading clubs count:", error);
+    el.innerText = "—";
+  }
+}
+
+async function loadUpcomingEventsCount() {
+  const el = document.getElementById('dash-stat-events');
+  if (!el) return;
+  try {
+    const now = new Date();
+    const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const snap = await getDocs(query(
+      collection(db, "events"),
+      where("date", ">=", now),
+      where("date", "<=", in7Days)
+    ));
+    el.innerText = snap.size;
+  } catch (error) {
+    console.error("Error loading events count:", error);
+    el.innerText = "—";
+  }
+}
+
+async function loadUpcomingEventsList() {
+  const container = document.getElementById('tab-content-events');
+  const badge = document.getElementById('dash-events-badge');
+  try {
+    const now = new Date();
+    const snap = await getDocs(query(collection(db, "events"), where("date", ">=", now), orderBy("date", "asc"), limit(5)));
+    if (snap.empty) {
+      container.innerHTML = `<p class="text-center py-6 text-slate-400 dark:text-slate-500">No upcoming events.</p>`;
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const dateStr = data.date?.toDate ? data.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+      container.insertAdjacentHTML('beforeend', `
+        <div class="flex justify-between items-center border-b border-slate-100 dark:border-white/5 pb-3 last:border-0">
+          <div>
+            <p class="font-semibold text-slate-900 dark:text-white text-sm">${escapeHTML(data.title)}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">${escapeHTML(data.location) || 'TBA'}</p>
+          </div>
+          <span class="text-xs font-medium text-brand-600 dark:text-brand-400">${escapeHTML(dateStr)}</span>
+        </div>
+      `);
+    });
+    if (badge) { badge.textContent = snap.size; badge.classList.remove('hidden'); }
+  } catch (error) {
+    console.error("Error loading events:", error);
+    container.innerHTML = `<p class="text-center py-6 text-rose-500">Failed to load.</p>`;
+  }
+}
+
+async function loadAnnouncements() {
+  const container = document.getElementById('tab-content-announcements');
+  const badge = document.getElementById('dash-announcements-badge');
+  try {
+    const snap = await getDocs(query(collection(db, "announcements"), orderBy("timestamp", "desc"), limit(5)));
+    if (snap.empty) {
+      container.innerHTML = `<p class="text-center py-6 text-slate-400 dark:text-slate-500">No announcements yet.</p>`;
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      container.insertAdjacentHTML('beforeend', `
+        <div class="border-b border-slate-100 dark:border-white/5 pb-3 last:border-0">
+          <p class="font-semibold text-slate-900 dark:text-white text-sm">${escapeHTML(data.title)}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${escapeHTML(data.body)}</p>
+        </div>
+      `);
+    });
+    if (badge) { badge.textContent = snap.size; badge.classList.remove('hidden'); }
+  } catch (error) {
+    console.error("Error loading announcements:", error);
+    container.innerHTML = `<p class="text-center py-6 text-rose-500">Failed to load.</p>`;
+  }
+}
+
 // Automatically load data when Dashboard is ready
 document.addEventListener("DOMContentLoaded", () => {
   loadStudyMaterials();
+  loadAnnouncements();
+  loadUpcomingEventsList();
+  loadUpcomingEventsCount();
+  loadClubsCount();
 });
 
 initThemeToggle();
