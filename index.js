@@ -1,11 +1,11 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { auth, db } from './firebase-init.js';
 import { initThemeToggle } from './theme-toggle.js';
 import { escapeHTML } from './utils.js';
 
 // brcrEmails is now UI-only — real admin gating lives in Firestore Rules (roles/{uid})
-const brcrEmails = ['admin@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iitr.ac.in'];
+const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'rahul@ce.iitr.ac.in', 'ashish@ce.iitr.ac.in'];
 
 // ==========================================
 // 2. DOM ELEMENTS (Auth)
@@ -26,6 +26,8 @@ const userAvatarEl = document.getElementById('user-avatar');
 // Note: If you changed userRoleBadge to querySelectorAll previously, keep that change here
 const userRoleBadge = document.querySelectorAll('#user-role-badge'); 
 const logoutBtn = document.getElementById('logout-btn');
+const moderationLink = document.getElementById('moderation-link');
+const adminSectionLabel = document.getElementById('admin-section-label');
 
 // ==========================================
 // 3. DOM ELEMENTS (SPA Routing)
@@ -70,12 +72,26 @@ onAuthStateChanged(auth, (user) => {
         badge.className = "mt-2 inline-block bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-bold border border-brand-100";
       }
     });
+        // Real admin check for the Moderation Queue link — separate from
+        // the isBrcr badge above, which is cosmetic only. This checks the
+        // actual roles/{uid} collection that Firestore Rules also enforce.
+        getDoc(doc(db, "roles", user.uid)).then((roleSnap) => {
+          const isAdmin = roleSnap.exists() && roleSnap.data().role === "admin";
+          if (isAdmin) {
+            moderationLink.classList.remove('hidden');
+            moderationLink.classList.add('flex');
+            adminSectionLabel.classList.remove('hidden');
+          }
+        }).catch((err) => console.error("Role check failed:", err));
   } else {
     // Guest View
     userProfileSection.classList.add('hidden');
     guestLoginSection.classList.remove('hidden');
     if (contributorPoints) contributorPoints.classList.add('hidden');
     if (headerUserProfile) headerUserProfile.classList.add('hidden'); // Hide header profile
+        moderationLink.classList.add('hidden');
+        moderationLink.classList.remove('flex');
+        adminSectionLabel.classList.add('hidden');
     
     userRoleBadge.forEach(badge => {
       badge.innerText = "Guest Preview";
