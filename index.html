@@ -256,7 +256,36 @@
         </div>
       </div>
     </div>
+    <!-- Admin Data Entry Widget -->
+    <div id="admin-panel" class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 mt-8 max-w-md hidden">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Add New Data</h3>
+      
+      <select id="admin-type" class="w-full mb-4 p-2 border border-slate-300 rounded dark:bg-slate-700 dark:text-white text-sm">
+        <option value="announcement">New Announcement</option>
+        <option value="club">New Club</option>
+        <option value="event">New Event</option>
+      </select>
+
+      <form id="admin-form" class="flex flex-col gap-3">
+        <!-- Shared Fields -->
+        <input type="text" id="admin-title" placeholder="Title or Name" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white" required>
+        <textarea id="admin-desc" placeholder="Description or Body" rows="3" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white" required></textarea>
+        
+        <!-- Event Only Fields (Hidden by default) -->
+        <input type="date" id="admin-date" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white hidden">
+        <input type="text" id="admin-location" placeholder="Location (e.g., Room 101)" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white hidden">
+
+        <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded transition-colors mt-2 text-sm">
+          Add to Database
+        </button>
+      </form>
+      
+      <p id="admin-feedback" class="mt-3 text-sm hidden"></p>
     </div>
+
+    </div>
+    </div>
+    
 
     <!-- 2. STUDY MATERIALS VIEW -->
     <div id="view-study" class="page-view hidden p-8 max-w-7xl mx-auto w-full space-y-6">

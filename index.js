@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, getDoc, collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, orderBy, limit, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { auth, db } from './firebase-init.js';
 import { initThemeToggle } from './theme-toggle.js';
 import { escapeHTML } from './utils.js';
@@ -81,6 +81,8 @@ onAuthStateChanged(auth, (user) => {
             moderationLink.classList.remove('hidden');
             moderationLink.classList.add('flex');
             adminSectionLabel.classList.remove('hidden');
+            // ADD THIS NEW LINE:
+            if (document.getElementById('admin-panel')) document.getElementById('admin-panel').classList.remove('hidden');
           }
         }).catch((err) => console.error("Role check failed:", err));
   } else {
@@ -265,3 +267,78 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 initThemeToggle();
+
+// 1. Handle showing/hiding Event specific fields
+const typeSelect = document.getElementById('admin-type');
+const dateInput = document.getElementById('admin-date');
+const locInput = document.getElementById('admin-location');
+
+if (typeSelect) {
+  typeSelect.addEventListener('change', (e) => {
+    if (e.target.value === 'event') {
+      dateInput.classList.remove('hidden');
+      locInput.classList.remove('hidden');
+      dateInput.required = true;
+    } else {
+      dateInput.classList.add('hidden');
+      locInput.classList.add('hidden');
+      dateInput.required = false;
+    }
+  });
+}
+
+// 2. Handle Form Submission
+const adminForm = document.getElementById('admin-form');
+if (adminForm) {
+  adminForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent page reload
+    
+    const type = typeSelect.value;
+    const title = document.getElementById('admin-title').value;
+    const desc = document.getElementById('admin-desc').value;
+    const feedback = document.getElementById('admin-feedback');
+    
+    feedback.textContent = "Saving...";
+    feedback.className = "mt-3 text-sm text-slate-500 block";
+
+    try {
+      if (type === 'announcement') {
+        await addDoc(collection(db, "announcements"), {
+          title: title,
+          body: desc,
+          timestamp: Timestamp.now()
+        });
+      } else if (type === 'club') {
+        await addDoc(collection(db, "clubs"), {
+          name: title,
+          description: desc,
+          active: true // Default all new clubs to active
+        });
+      } else if (type === 'event') {
+        // Convert HTML date string to Firebase Timestamp
+        const dateVal = new Date(document.getElementById('admin-date').value);
+        await addDoc(collection(db, "events"), {
+          title: title,
+          description: desc,
+          location: document.getElementById('admin-location').value,
+          date: Timestamp.fromDate(dateVal)
+        });
+      }
+      
+      feedback.textContent = `Successfully added new ${type}!`;
+      feedback.className = "mt-3 text-sm text-emerald-600 block";
+      adminForm.reset(); // Clear form fields
+      
+      // Optional: hide event fields again if event was submitted
+      dateInput.classList.add('hidden');
+      locInput.classList.add('hidden');
+      dateInput.required = false;
+      typeSelect.value = 'announcement'; 
+
+    } catch (error) {
+      console.error("Error adding document:", error);
+      feedback.textContent = "Error: " + error.message;
+      feedback.className = "mt-3 text-sm text-rose-500 block";
+    }
+  });
+}
