@@ -6,6 +6,10 @@ const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJsr
 
 let currentUser = null;
 onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
   currentUser = user;
 });
 

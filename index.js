@@ -53,14 +53,19 @@ if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
 // 4. AUTHENTICATION LOGIC
 // ==========================================
 onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Guests aren't allowed on the dashboard — send them to log in.
+    window.location.href = "login.html";
+    return;
+  }
+
   mainBody.classList.remove('opacity-0');
 
-  if (user) {
-    // Logged In
-    userProfileSection.classList.remove('hidden');
-    guestLoginSection.classList.add('hidden');
-    if (contributorPoints) contributorPoints.classList.remove('hidden');
-    
+  // Logged In
+  userProfileSection.classList.remove('hidden');
+  guestLoginSection.classList.add('hidden');
+  if (contributorPoints) contributorPoints.classList.remove('hidden');
+
     const emailStr = user.email.toLowerCase();
     const nameStr = emailStr.split('@')[0]; 
     const capitalizedName = nameStr.charAt(0).toUpperCase() + nameStr.slice(1);
@@ -85,28 +90,18 @@ onAuthStateChanged(auth, (user) => {
         // actual roles/{uid} collection that Firestore Rules also enforce.
         getDoc(doc(db, "roles", user.uid)).then((roleSnap) => {
           const isAdmin = roleSnap.exists() && roleSnap.data().role === "admin";
-          if (isAdmin || isBrcr) {
+                    if (isAdmin || isBrcr) {
             moderationLink.classList.remove('hidden');
             moderationLink.classList.add('flex');
             adminSectionLabel.classList.remove('hidden');
-            // ADD THIS NEW LINE:
-            if (document.getElementById('admin-panel')) document.getElementById('admin-panel').classList.remove('hidden');
+            if (adminAddBtn) { adminAddBtn.classList.remove('hidden'); adminAddBtn.classList.add('flex'); }
           }
-        }).catch((err) => console.error("Role check failed:", err));
-  } else {
-    // Guest View
-    userProfileSection.classList.add('hidden');
-    guestLoginSection.classList.remove('hidden');
-    if (contributorPoints) contributorPoints.classList.add('hidden');
-        moderationLink.classList.add('hidden');
-        moderationLink.classList.remove('flex');
-        adminSectionLabel.classList.add('hidden');
-    
-    userRoleBadge.forEach(badge => {
-      badge.innerText = "Guest Preview";
-      badge.className = "mt-2 inline-block bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-xs font-bold border border-slate-300";
-    });
-  }
+                }).catch((err) => console.error("Role check failed:", err));
+
+  // Now that we know this is a real logged-in user, load dashboard data.
+  loadStudyMaterials();
+  loadAnnouncements();
+  loadUpcomingEventsList();
 });
 
 if (logoutBtn) {
@@ -317,29 +312,54 @@ async function loadAnnouncements() {
   }
 }
 
-// Automatically load data when Dashboard is ready
-document.addEventListener("DOMContentLoaded", () => {
-  loadStudyMaterials();
-  loadAnnouncements();
-  loadUpcomingEventsList();
-});
-
 initThemeToggle();
 
-// 1. Handle showing/hiding Event specific fields
+// ==========================================
+// Admin: New Announcement / Event Modal
+// ==========================================
+const adminAddBtn = document.getElementById('admin-add-btn');
+const adminModalBackdrop = document.getElementById('admin-modal-backdrop');
+const adminModalBox = document.getElementById('admin-modal-box');
+const adminModalClose = document.getElementById('admin-modal-close');
+
 const typeSelect = document.getElementById('admin-type');
+const dateField = document.getElementById('admin-date-field');
+const locField = document.getElementById('admin-location-field');
 const dateInput = document.getElementById('admin-date');
 const locInput = document.getElementById('admin-location');
 
+function openAdminModal() {
+  adminModalBackdrop.classList.remove('hidden');
+  adminModalBackdrop.classList.add('flex');
+}
+function closeAdminModal() {
+  adminModalBackdrop.classList.add('hidden');
+  adminModalBackdrop.classList.remove('flex');
+  adminForm.reset();
+  dateField.classList.add('hidden');
+  locField.classList.add('hidden');
+  dateInput.required = false;
+  adminFeedback.classList.add('hidden');
+}
+
+if (adminAddBtn) adminAddBtn.addEventListener('click', openAdminModal);
+if (adminModalClose) adminModalClose.addEventListener('click', closeAdminModal);
+if (adminModalBackdrop) {
+  adminModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === adminModalBackdrop) closeAdminModal(); // ignore clicks inside the box
+  });
+}
+
+// Toggle Event-only fields
 if (typeSelect) {
   typeSelect.addEventListener('change', (e) => {
     if (e.target.value === 'event') {
-      dateInput.classList.remove('hidden');
-      locInput.classList.remove('hidden');
+      dateField.classList.remove('hidden');
+      locField.classList.remove('hidden');
       dateInput.required = true;
     } else {
-      dateInput.classList.add('hidden');
-      locInput.classList.add('hidden');
+      dateField.classList.add('hidden');
+      locField.classList.add('hidden');
       dateInput.required = false;
     }
   });
@@ -347,17 +367,18 @@ if (typeSelect) {
 
 // 2. Handle Form Submission
 const adminForm = document.getElementById('admin-form');
+const adminFeedback = document.getElementById('admin-feedback');
+
 if (adminForm) {
   adminForm.addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevent page reload
-    
+
     const type = typeSelect.value;
     const title = document.getElementById('admin-title').value;
     const desc = document.getElementById('admin-desc').value;
-    const feedback = document.getElementById('admin-feedback');
-    
-    feedback.textContent = "Saving...";
-    feedback.className = "mt-3 text-sm text-slate-500 block";
+
+    adminFeedback.textContent = "Saving...";
+    adminFeedback.className = "text-sm text-slate-500 block";
 
     try {
       if (type === 'announcement') {
@@ -365,12 +386,6 @@ if (adminForm) {
           title: title,
           body: desc,
           timestamp: Timestamp.now()
-        });
-      } else if (type === 'club') {
-        await addDoc(collection(db, "clubs"), {
-          name: title,
-          description: desc,
-          active: true // Default all new clubs to active
         });
       } else if (type === 'event') {
         // Convert HTML date string to Firebase Timestamp
@@ -382,21 +397,20 @@ if (adminForm) {
           date: Timestamp.fromDate(dateVal)
         });
       }
-      
-      feedback.textContent = `Successfully added new ${type}!`;
-      feedback.className = "mt-3 text-sm text-emerald-600 block";
-      adminForm.reset(); // Clear form fields
-      
-      // Optional: hide event fields again if event was submitted
-      dateInput.classList.add('hidden');
-      locInput.classList.add('hidden');
-      dateInput.required = false;
-      typeSelect.value = 'announcement'; 
+
+      adminFeedback.textContent = `Successfully added new ${type}!`;
+      adminFeedback.className = "text-sm text-emerald-600 block";
+
+      // Refresh the dashboard lists so the new item shows up immediately
+      loadAnnouncements();
+      loadUpcomingEventsList();
+
+      setTimeout(closeAdminModal, 900);
 
     } catch (error) {
       console.error("Error adding document:", error);
-      feedback.textContent = "Error: " + error.message;
-      feedback.className = "mt-3 text-sm text-rose-500 block";
+      adminFeedback.textContent = "Error: " + error.message;
+      adminFeedback.className = "text-sm text-rose-500 block";
     }
   });
 }

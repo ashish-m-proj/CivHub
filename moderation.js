@@ -21,7 +21,7 @@ const emptyStateEl = document.getElementById('empty-state');
 // Firestore itself will reject the write.
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    showAccessDenied();
+    window.location.href = "login.html";
     return;
   }
 

@@ -201,15 +201,22 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-[#0f0a18] border border-slate-200 dark:border-[#3b0764] rounded-xl shadow-sm overflow-hidden transition-colors">
-  
+                <div class="bg-white dark:bg-[#0f0a18] border border-slate-200 dark:border-[#3b0764] rounded-xl shadow-sm overflow-hidden transition-colors">
+
         <!-- Tabs Header -->
-        <div class="flex border-b border-slate-200 dark:border-[#3b0764]">
+        <div class="flex items-center border-b border-slate-200 dark:border-[#3b0764]">
+          <div class="flex flex-1">
           <button id="tab-btn-announcements" onclick="switchTab('announcements')" class="flex-1 py-3 px-4 text-sm font-bold text-purple-700 dark:text-[#d8b4fe] border-b-2 border-purple-600 dark:border-[#a855f7] bg-purple-50 dark:bg-[#2b1045] transition-all">
             Announcements <span id="dash-announcements-badge" class="ml-1 bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
           </button>
-          <button id="tab-btn-events" onclick="switchTab('events')" class="flex-1 py-3 px-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all border-b-2 border-transparent">
+                    <button id="tab-btn-events" onclick="switchTab('events')" class="flex-1 py-3 px-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all border-b-2 border-transparent">
             Upcoming Events <span id="dash-events-badge" class="ml-1 bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
+          </button>
+          </div>
+
+          <!-- Admin-only: opens the New Announcement/Event modal -->
+          <button id="admin-add-btn" class="hidden items-center gap-1.5 mr-3 px-3 py-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg transition-colors shrink-0">
+            <i class="fas fa-plus"></i> New
           </button>
         </div>
 
@@ -228,36 +235,8 @@
         </div>
       </div>
     </div>
-    <!-- Admin Data Entry Widget -->
-    <div id="admin-panel" class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 mt-8 max-w-md hidden">
-      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Add New Data</h3>
-      
-      <select id="admin-type" class="w-full mb-4 p-2 border border-slate-300 rounded dark:bg-slate-700 dark:text-white text-sm">
-        <option value="announcement">New Announcement</option>
-        <option value="club">New Club</option>
-        <option value="event">New Event</option>
-      </select>
-
-      <form id="admin-form" class="flex flex-col gap-3">
-        <!-- Shared Fields -->
-        <input type="text" id="admin-title" placeholder="Title or Name" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white" required>
-        <textarea id="admin-desc" placeholder="Description or Body" rows="3" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white" required></textarea>
-        
-        <!-- Event Only Fields (Hidden by default) -->
-        <input type="date" id="admin-date" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white hidden">
-        <input type="text" id="admin-location" placeholder="Location (e.g., Room 101)" class="p-2 border border-slate-300 rounded text-sm dark:bg-slate-700 dark:text-white hidden">
-
-        <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 px-4 rounded transition-colors mt-2 text-sm">
-          Add to Database
-        </button>
-      </form>
-      
-      <p id="admin-feedback" class="mt-3 text-sm hidden"></p>
-    </div>
-
-    </div>
-    </div>
-    
+  </div>
+</div>
 
     <!-- 2. STUDY MATERIALS VIEW -->
     <div id="view-study" class="page-view hidden p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -823,6 +802,54 @@
         </div>
       </div>
     </div>
+
+      <!-- Admin: New Announcement / Event Modal -->
+  <div id="admin-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div id="admin-modal-box" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Post New Update</h3>
+        <button id="admin-modal-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="admin-form" class="p-6 flex flex-col gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Type</label>
+          <select id="admin-type" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="announcement">Announcement</option>
+            <option value="event">Event</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Title</label>
+          <input type="text" id="admin-title" placeholder="Title or Name" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Description</label>
+          <textarea id="admin-desc" placeholder="Description or Body" rows="3" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" required></textarea>
+        </div>
+
+        <!-- Event Only Fields -->
+        <div id="admin-date-field" class="hidden">
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Date</label>
+          <input type="date" id="admin-date" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div id="admin-location-field" class="hidden">
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Location</label>
+          <input type="text" id="admin-location" placeholder="e.g., Room 101" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-medium py-2.5 rounded-lg transition-colors text-sm mt-2">
+          Post Update
+        </button>
+
+        <p id="admin-feedback" class="text-sm hidden"></p>
+      </form>
+    </div>
+  </div>
 
   </main>
   <script>
