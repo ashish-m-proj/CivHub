@@ -5,7 +5,7 @@ import { initThemeToggle } from './theme-toggle.js';
 import { escapeHTML } from './utils.js';
 
 // brcrEmails is now UI-only — real admin gating lives in Firestore Rules (roles/{uid})
-const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'anushka_rv@ce.iitr.ac.in'];
+const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'anushka_rv@ce.iitr.ac.in', 'boya_rk@ce.iitr.ac.in'];
 
 // ==========================================
 // 2. DOM ELEMENTS (Auth)
@@ -14,11 +14,6 @@ const mainBody = document.getElementById('main-body');
 const userProfileSection = document.getElementById('user-profile-section');
 const guestLoginSection = document.getElementById('guest-login-section');
 const contributorPoints = document.getElementById('contributor-points');
-
-// NEW: Header Profile Elements
-const headerUserProfile = document.getElementById('header-user-profile');
-const headerUserName = document.getElementById('header-user-name');
-const headerUserAvatar = document.getElementById('header-user-avatar');
 
 const userNameEl = document.getElementById('user-name');
 const userEmailEl = document.getElementById('user-email');
@@ -35,6 +30,24 @@ const adminSectionLabel = document.getElementById('admin-section-label');
 const navLinks = document.querySelectorAll('.nav-link');
 const pageViews = document.querySelectorAll('.page-view');
 const headerTitle = document.getElementById('header-title');
+// ==========================================
+// Mobile Sidebar Toggle
+// ==========================================
+const sidebar = document.getElementById('sidebar');
+const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+function openSidebar() {
+  sidebar.classList.remove('-translate-x-full');
+  sidebarBackdrop.classList.remove('hidden');
+}
+function closeSidebar() {
+  sidebar.classList.add('-translate-x-full');
+  sidebarBackdrop.classList.add('hidden');
+}
+
+if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openSidebar);
+if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
 
 // ==========================================
 // 4. AUTHENTICATION LOGIC
@@ -47,7 +60,6 @@ onAuthStateChanged(auth, (user) => {
     userProfileSection.classList.remove('hidden');
     guestLoginSection.classList.add('hidden');
     if (contributorPoints) contributorPoints.classList.remove('hidden');
-    if (headerUserProfile) headerUserProfile.classList.remove('hidden'); // Show header profile
     
     const emailStr = user.email.toLowerCase();
     const nameStr = emailStr.split('@')[0]; 
@@ -58,10 +70,6 @@ onAuthStateChanged(auth, (user) => {
     if (userNameEl) userNameEl.innerText = capitalizedName;
     if (userEmailEl) userEmailEl.innerText = emailStr;
     if (userAvatarEl) userAvatarEl.innerText = capitalizedName.charAt(0).toUpperCase();
-
-    // NEW: Populate Header info
-    if (headerUserName) headerUserName.innerText = capitalizedName;
-    if (headerUserAvatar) headerUserAvatar.innerText = capitalizedName.charAt(0).toUpperCase();
 
     userRoleBadge.forEach(badge => {
       if(isBrcr) {
@@ -90,7 +98,6 @@ onAuthStateChanged(auth, (user) => {
     userProfileSection.classList.add('hidden');
     guestLoginSection.classList.remove('hidden');
     if (contributorPoints) contributorPoints.classList.add('hidden');
-    if (headerUserProfile) headerUserProfile.classList.add('hidden'); // Hide header profile
         moderationLink.classList.add('hidden');
         moderationLink.classList.remove('flex');
         adminSectionLabel.classList.add('hidden');
@@ -157,6 +164,7 @@ navLinks.forEach(link => {
     
     // Switch the view!
     switchView(target, title);
+    closeSidebar(); // no-op on desktop, closes the drawer on mobile
   });
 });
 
@@ -167,8 +175,6 @@ navLinks.forEach(link => {
 async function loadStudyMaterials() {
   const studyTbody = document.getElementById('study-materials-tbody');
   const dashRecentTbody = document.getElementById('dash-recent-materials-tbody');
-  const dashStatMaterials = document.getElementById('dash-stat-materials');
-  const dashStatMaterialsTrend = document.getElementById('dash-stat-materials-trend');
   
   if (!studyTbody && !dashRecentTbody) return;
 
@@ -185,13 +191,6 @@ async function loadStudyMaterials() {
     materials.push({ id: doc.id, ...doc.data() });
   });
 
-    // 1. Update Dashboard Stats
-    if (dashStatMaterials) {
-      dashStatMaterials.innerText = materials.length;
-      if (dashStatMaterialsTrend) {
-        dashStatMaterialsTrend.innerHTML = `<i class="fas fa-check-circle text-emerald-500"></i> Verified resources online`;
-      }
-    }
 
     // 2. Update Dashboard Recent Materials Table (Top 5)
     if (dashRecentTbody) {
@@ -261,36 +260,6 @@ async function loadStudyMaterials() {
   }
 }
 
-async function loadClubsCount() {
-  const el = document.getElementById('dash-stat-clubs');
-  if (!el) return;
-  try {
-    const snap = await getDocs(query(collection(db, "clubs"), where("active", "==", true)));
-    el.innerText = snap.size;
-  } catch (error) {
-    console.error("Error loading clubs count:", error);
-    el.innerText = "—";
-  }
-}
-
-async function loadUpcomingEventsCount() {
-  const el = document.getElementById('dash-stat-events');
-  if (!el) return;
-  try {
-    const now = new Date();
-    const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const snap = await getDocs(query(
-      collection(db, "events"),
-      where("date", ">=", now),
-      where("date", "<=", in7Days)
-    ));
-    el.innerText = snap.size;
-  } catch (error) {
-    console.error("Error loading events count:", error);
-    el.innerText = "—";
-  }
-}
-
 async function loadUpcomingEventsList() {
   const container = document.getElementById('tab-content-events');
   const badge = document.getElementById('dash-events-badge');
@@ -353,8 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadStudyMaterials();
   loadAnnouncements();
   loadUpcomingEventsList();
-  loadUpcomingEventsCount();
-  loadClubsCount();
 });
 
 initThemeToggle();
