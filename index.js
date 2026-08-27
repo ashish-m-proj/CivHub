@@ -76,27 +76,39 @@ onAuthStateChanged(auth, (user) => {
     if (userEmailEl) userEmailEl.innerText = emailStr;
     if (userAvatarEl) userAvatarEl.innerText = capitalizedName.charAt(0).toUpperCase();
 
-    userRoleBadge.forEach(badge => {
-      if(isBrcr) {
-        badge.innerText = "BR / Admin";
-        badge.className = "mt-2 inline-block bg-rose-50 text-rose-700 px-2 py-0.5 rounded text-xs font-bold border border-rose-100";
-      } else {
-        badge.innerText = "Student";
-        badge.className = "mt-2 inline-block bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-bold border border-brand-100";
+    function setRoleBadge(isAdminRole) {
+      userRoleBadge.forEach(badge => {
+        if (isAdminRole) {
+          badge.innerText = "BR / Admin";
+          badge.className = "mt-2 inline-block bg-rose-50 text-rose-700 px-2 py-0.5 rounded text-xs font-bold border border-rose-100";
+        } else {
+          badge.innerText = "Student";
+          badge.className = "mt-2 inline-block bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-bold border border-brand-100";
+        }
+      });
+    }
+
+    // Show "Student" immediately so the badge isn't stuck on "Loading..."
+    // while the real role check below is in flight. brcrEmails is no longer
+    // used to decide the badge text — only the actual roles/{uid} doc does,
+    // so the badge can never say something the real access level disagrees with.
+    setRoleBadge(false);
+
+    // Real admin check — this drives BOTH the badge and the Moderation Queue
+    // link, so they can no longer contradict each other. This checks the
+    // actual roles/{uid} collection that Firestore Rules also enforce.
+    getDoc(doc(db, "roles", user.uid)).then((roleSnap) => {
+      const isAdmin = roleSnap.exists() && roleSnap.data().role === "admin";
+
+      setRoleBadge(isAdmin);
+
+      if (isAdmin || isBrcr) {
+        moderationLink.classList.remove('hidden');
+        moderationLink.classList.add('flex');
+        adminSectionLabel.classList.remove('hidden');
+        if (adminAddBtn) { adminAddBtn.classList.remove('hidden'); adminAddBtn.classList.add('flex'); }
       }
-    });
-        // Real admin check for the Moderation Queue link — separate from
-        // the isBrcr badge above, which is cosmetic only. This checks the
-        // actual roles/{uid} collection that Firestore Rules also enforce.
-        getDoc(doc(db, "roles", user.uid)).then((roleSnap) => {
-          const isAdmin = roleSnap.exists() && roleSnap.data().role === "admin";
-                    if (isAdmin || isBrcr) {
-            moderationLink.classList.remove('hidden');
-            moderationLink.classList.add('flex');
-            adminSectionLabel.classList.remove('hidden');
-            if (adminAddBtn) { adminAddBtn.classList.remove('hidden'); adminAddBtn.classList.add('flex'); }
-          }
-                }).catch((err) => console.error("Role check failed:", err));
+    }).catch((err) => console.error("Role check failed:", err));
 
   // Now that we know this is a real logged-in user, load dashboard data.
   loadStudyMaterials();
@@ -162,6 +174,22 @@ navLinks.forEach(link => {
     closeSidebar(); // no-op on desktop, closes the drawer on mobile
   });
 });
+
+// Wire up dashboard quick-action cards + "View All" — these previously
+// looked clickable (cursor-pointer, hover states) but had no handler.
+const quickActionStudy = document.getElementById('quick-action-study');
+const quickActionClubs = document.getElementById('quick-action-clubs');
+const dashViewAllBtn = document.getElementById('dash-view-all-btn');
+
+if (quickActionStudy) {
+  quickActionStudy.addEventListener('click', () => switchView('view-study', 'Study Materials / Repository'));
+}
+if (quickActionClubs) {
+  quickActionClubs.addEventListener('click', () => switchView('view-clubs', 'Campus Clubs / Directory'));
+}
+if (dashViewAllBtn) {
+  dashViewAllBtn.addEventListener('click', () => switchView('view-study', 'Study Materials / Repository'));
+}
 
 // ==========================================
 // 6. DYNAMIC DATA RENDERING (FIRESTORE)

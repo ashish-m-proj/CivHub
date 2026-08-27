@@ -96,7 +96,7 @@
     
         <header class="h-16 bg-white dark:bg-white/[0.02] dark:backdrop-blur-3xl border-b border-slate-200 dark:border-white/10 flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30 shrink-0 transition-colors">
       <div class="flex items-center gap-3 text-sm">
-        <button id="mobile-menu-btn" class="md:hidden text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors p-2 -ml-2">
+        <button id="mobile-menu-btn" class="md:hidden text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors p-2 -ml-2" aria-label="Open menu" title="Open menu">
           <i class="fas fa-bars text-lg"></i>
         </button>
         <span class="text-slate-400">Pages</span>
@@ -117,7 +117,7 @@
         
 
         <!-- Theme Toggle Button -->
-        <button id="theme-toggle" class="relative text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-[#d8b4fe] transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2b1045] flex items-center justify-center">
+        <button id="theme-toggle" class="relative text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-[#d8b4fe] transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2b1045] flex items-center justify-center" aria-label="Toggle dark mode" title="Toggle dark mode">
           
           <!-- Modern Moon SVG (Dark Mode Toggle) -->
           <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 transition-transform duration-300 hover:-rotate-12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -134,9 +134,8 @@
 
         <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2 hidden sm:block"></div> <!-- Existing Divider, updated with dark class -->
 
-        <button class="relative text-slate-500 hover:text-slate-700 transition-colors p-2">
+        <button class="relative text-slate-500 hover:text-slate-700 transition-colors p-2" aria-label="Notifications" title="Notifications">
           <i class="fas fa-bell"></i>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 border-2 border-white"></span>
         </button>
       </div>
       
@@ -165,13 +164,13 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-5 shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all cursor-pointer relative overflow-hidden group">
+            <div id="quick-action-study" class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-5 shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all cursor-pointer relative overflow-hidden group">
               <div class="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-blue-50 dark:from-blue-900/20 to-transparent"></div>
               <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Study Library</h3>
               <p class="text-sm text-slate-500 dark:text-slate-400 mb-4 max-w-[200px]">Access verified PYQs, notes, and manuals.</p>
               <span class="text-brand-600 dark:text-brand-400 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Browse Directory <i class="fas fa-arrow-right text-xs"></i></span>
             </div>
-            <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-5 shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all cursor-pointer relative overflow-hidden group">
+            <div id="quick-action-clubs" class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-5 shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all cursor-pointer relative overflow-hidden group">
               <div class="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-purple-50 dark:from-purple-900/20 to-transparent"></div>
               <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Campus Clubs</h3>
               <p class="text-sm text-slate-500 dark:text-slate-400 mb-4 max-w-[200px]">Join ASCE, Concrete Society, and more.</p>
@@ -182,7 +181,7 @@
           <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden transition-colors">
             <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex justify-between items-center">
               <h2 class="font-bold text-slate-900 dark:text-white">Recently Added Materials</h2>
-              <button class="text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 font-medium">View All</button>
+              <button id="dash-view-all-btn" class="text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 font-medium">View All</button>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
