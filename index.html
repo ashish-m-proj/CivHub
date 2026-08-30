@@ -52,6 +52,9 @@
         <a href="#" data-target="view-calendar" data-title="Events Calendar" class="nav-link flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
           <i class="fas fa-calendar-alt w-5 text-center"></i> Events Calendar
         </a>
+        <a href="#" data-target="view-timetable" data-title="Time Table" class="nav-link flex items-center gap-3 px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg font-medium transition-colors">
+          <i class="fas fa-table-cells w-5 text-center"></i> Time Table
+        </a>
 
         <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Personal</p>
         
@@ -112,7 +115,7 @@
         <!-- Header Login Button (Visible to guests) -->
         <div id="contributor-points" class="flex items-center gap-2 px-4 py-1.5 bg-purple-50 text-purple-700 font-semibold rounded-full border border-purple-200 dark:bg-[#1a1025] dark:text-[#d8b4fe] dark:border-[#581c87] dark:shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all text-sm cursor-pointer hover:scale-105">
           <i class="fas fa-star text-amber-400 dark:text-amber-300"></i>
-          <span>240 Pts</span>
+          <span id="header-contributor-points">0 Pts</span>
         </div>        
         
 
@@ -244,64 +247,57 @@
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Study Materials</h1>
           <p class="text-slate-500 dark:text-slate-400 mt-1">Browse, download, and contribute verified academic resources.</p>
         </div>
-        <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+        <a href="contribute_material.html" class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
           <i class="fas fa-cloud-upload-alt text-xs"></i> Upload Material
-        </button>
+        </a>
       </div>
 
-      <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center transition-colors">
-        <div class="relative w-full md:w-96">
+      <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm space-y-4 transition-colors">
+        <div class="relative w-full">
           <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 dark:text-slate-500 text-sm"></i>
-          <input type="text" placeholder="Search by file name, topic, or keyword..." class="w-full pl-9 pr-4 py-2 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-400 transition-shadow">
+          <input type="text" id="study-search-input" placeholder="Search by file name, topic, or keyword..." class="w-full pl-9 pr-4 py-2 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-400 transition-shadow">
         </div>
-        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <select class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-brand-500 block py-2 px-3 outline-none">
-            <option>All Semesters</option><option selected>4th Semester</option><option>3rd Semester</option>
-          </select>
-          <select id="subject" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
-            <option value="" disabled selected>Select subject</option>
-            <option>Engineering Mechanics</option>
-            <option>Geospatial Engineering-I</option>
-            <option>Geospatial Engineering-II</option>
-            <option>Fluid Mechanics</option>
-            <option>Solid Mechanics</option>
-            <option>Structural Analysis-I</option>
-            <option>Structural Analysis-II</option>
-            <option>Channel Hydraulics</option>
-            <option>Water Supply Engineering</option>
-            <option>Design of Reinforced Concrete</option>
-            <option>Soil Mechanics</option>
-            <option>Waste Water Engineering</option>
-            <option>Design of Steel Elements</option>
-            <option>Highway and Traffic Engineering</option>
-            <option>Design of Structural Systems</option>
-            <option>Foundation Engineering</option>
-            <option>Railway Engineering</option>
-          </select>
-          <select class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-brand-500 block py-2 px-3 outline-none">
-            <option>All Types</option><option>PYQs (Previous Papers)</option><option>Handwritten Notes</option><option>Lab Manuals</option>
-          </select>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <!-- Options populated by index.js from curriculum-data.js (ALL_SEMESTERS)
+                 so this never drifts from the single source of truth. -->
+            <label for="study-semester-filter" class="block text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Semester</label>
+            <select id="study-semester-filter" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-1 focus:ring-brand-500 focus:outline-none py-2 px-3">
+              <option value="">All Semesters</option>
+            </select>
+          </div>
+          <div>
+            <!-- Options repopulated by index.js from curriculum-data.js: shows
+                 only the subjects for the chosen semester. Disabled until a
+                 semester is picked, matching the cascade on the Contribute
+                 Material page, so a subject can't be chosen out of context. -->
+            <label for="study-subject-filter" class="block text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Subject</label>
+            <select id="study-subject-filter" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-1 focus:ring-brand-500 focus:outline-none py-2 px-3 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              <option value="">Select semester first</option>
+            </select>
+          </div>
+          <div>
+            <label for="study-type-filter" class="block text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Type</label>
+            <select id="study-type-filter" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-sm rounded-md focus:ring-1 focus:ring-brand-500 focus:outline-none py-2 px-3">
+              <option value="">All Types</option>
+              <option>Lecture Slides</option>
+                <option>Practicals</option>
+                <option>Question Papers</option>
+                <option>Question Paper Solutions</option>
+                <option>Assignments</option>
+                <option>Assignment Solutions</option>
+                <option>Reference Books</option>
+                <option>Tutorials</option>
+                <option>Tutorial Solutions</option>
+                <option>Miscellaneous</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mt-8 mb-4">Browse by Subject (Sem 4)</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm hover:border-brand-400 dark:hover:border-white/30 cursor-pointer transition-all flex items-center gap-4 group">
-          <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-brand-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors"><i class="fas fa-folder"></i></div>
-          <div><h3 class="font-bold text-slate-900 dark:text-white">Fluid Mechanics</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">42 Files</p></div>
-        </div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm hover:border-brand-400 dark:hover:border-white/30 cursor-pointer transition-all flex items-center gap-4 group">
-          <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-brand-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors"><i class="fas fa-folder"></i></div>
-          <div><h3 class="font-bold text-slate-900 dark:text-white">Structural Analysis</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">38 Files</p></div>
-        </div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm hover:border-brand-400 dark:hover:border-white/30 cursor-pointer transition-all flex items-center gap-4 group">
-          <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-brand-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors"><i class="fas fa-folder"></i></div>
-          <div><h3 class="font-bold text-slate-900 dark:text-white">Geotech Eng.</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">27 Files</p></div>
-        </div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm hover:border-brand-400 dark:hover:border-white/30 cursor-pointer transition-all flex items-center gap-4 group">
-          <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-500/20 text-brand-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors"><i class="fas fa-folder"></i></div>
-          <div><h3 class="font-bold text-slate-900 dark:text-white">Surveying II</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">19 Files</p></div>
-        </div>
+      <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mt-8 mb-4">Browse by Subject</h2>
+      <div id="study-subject-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <p class="text-sm text-slate-400 dark:text-slate-500 col-span-full">Loading subjects...</p>
       </div>
 
       <div class="mt-8">
@@ -331,13 +327,10 @@
             </table>
           </div>
           <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
-            <span class="text-sm text-slate-500 dark:text-slate-400">Showing 1 to 4 of 124 entries</span>
+            <span id="study-pagination-info" class="text-sm text-slate-500 dark:text-slate-400">Loading...</span>
             <div class="flex gap-1">
-              <button class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed">Previous</button>
-              <button class="px-3 py-1 border border-brand-600 dark:border-brand-500 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-medium rounded text-sm">1</button>
-              <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">2</button>
-              <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">3</button>
-              <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">Next</button>
+              <button id="study-prev-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Previous</button>
+              <button id="study-next-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Next</button>
             </div>
           </div>
         </div>
@@ -345,131 +338,41 @@
     </div>
 
     <!-- 3. CAMPUS CLUBS VIEW -->
-    <div id="view-clubs" class="page-view hidden p-8 max-w-7xl mx-auto w-full space-y-6">
+        <div id="view-clubs" class="page-view hidden p-8 max-w-7xl mx-auto w-full space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Campus Clubs & Societies</h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-1">Discover, join, and collaborate with student-led organizations.</p>
+          <p class="text-slate-500 dark:text-slate-400 mt-1">
+            Discover, join, and collaborate with student-led organizations.
+            <span id="clubs-total-count" class="text-slate-400 dark:text-slate-500"></span>
+          </p>
         </div>
-        <div class="flex gap-3">
-          <button class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">My Memberships</button>
-          <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
-            <i class="fas fa-plus text-xs"></i> Register New Club
-          </button>
-        </div>
+        <button class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors flex items-center gap-2">
+          <i class="fas fa-star text-xs text-amber-400"></i> My Memberships
+        </button>
       </div>
 
       <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center transition-colors">
         <div class="relative w-full md:w-96">
           <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 dark:text-slate-500 text-sm"></i>
-          <input type="text" placeholder="Search clubs by name or category..." class="w-full pl-9 pr-4 py-2 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm outline-none focus:border-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-400 transition-shadow">
+          <input type="text" id="clubs-search" placeholder="Search clubs by name..." class="w-full pl-9 pr-4 py-2 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm outline-none focus:border-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-400 transition-shadow">
         </div>
-        <div class="flex bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-transparent dark:border-white/10">
-          <button class="px-4 py-1.5 bg-white dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded-md shadow-sm text-sm transition-all">All Clubs</button>
-          <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all">Technical</button>
-          <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all">Cultural</button>
-          <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all">Sports</button>
+        <div class="flex flex-wrap justify-end gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-transparent dark:border-white/10">
+          <button data-category="all" class="clubs-filter-btn px-3 py-1.5 bg-white dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded-md shadow-sm text-sm transition-all flex items-center gap-1.5"><i class="fas fa-layer-group text-xs"></i> All Clubs</button>
+          <button data-category="technical" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-microchip text-xs"></i> Technical</button>
+          <button data-category="cultural" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-masks-theater text-xs"></i> Cultural</button>
+          <button data-category="social" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-hand-holding-heart text-xs"></i> Social</button>
+          <button data-category="magazines" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-newspaper text-xs"></i> Magazines</button>
+          <button data-category="branch" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-sitemap text-xs"></i> Branch</button>
+          <button data-category="misc" class="clubs-filter-btn px-3 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex items-center gap-1.5"><i class="fas fa-ellipsis text-xs"></i> Misc</button>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-        <!-- Club Card 1: ASCE -->
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all flex flex-col h-full overflow-hidden">
-          <div class="h-24 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600/60 dark:to-indigo-800/60"></div>
-          <div class="px-6 pb-6 flex-1 flex flex-col relative">
-            <div class="w-16 h-16 rounded-xl bg-white dark:bg-[#130922] border border-slate-200 dark:border-white/20 flex items-center justify-center text-3xl shadow-sm -mt-8 mb-3 overflow-hidden">
-              <i class="fas fa-globe text-blue-600 dark:text-blue-400"></i>
-            </div>
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-2">ASCE Student Chapter</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded text-xs font-semibold border border-blue-100 dark:border-blue-500/30">Technical</span>
-              <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded text-xs font-semibold border border-slate-200 dark:border-white/10">Professional</span>
-            </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1">Focuses on professional development, guest lectures, and networking.</p>
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
-              <div class="flex -space-x-2 mr-3">
-                <div class="w-7 h-7 rounded-full border-2 border-white dark:border-[#130922] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-slate-300">+124</div>
-              </div>
-              <button class="px-4 py-1.5 bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 font-medium rounded-md text-sm">View Profile</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Club Card 2: CESS -->
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all flex flex-col h-full overflow-hidden">
-          <div class="h-24 bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-600/60 dark:to-cyan-800/60"></div>
-          <div class="px-6 pb-6 flex-1 flex flex-col relative">
-            <div class="w-16 h-16 rounded-xl bg-white dark:bg-[#130922] border border-slate-200 dark:border-white/20 flex items-center justify-center text-3xl shadow-sm -mt-8 mb-3 overflow-hidden">
-              <i class="fas fa-building text-brand-600 dark:text-brand-400"></i>
-            </div>
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-2">Civil Engineering Students' Society</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded text-xs font-semibold border border-slate-200 dark:border-white/10">Departmental</span>
-            </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1">Organizes freshers, farewells, and core departmental events.</p>
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
-              <div class="w-7 h-7 rounded-full border-2 border-white dark:border-[#130922] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-slate-300 mr-2">250+</div>
-              <button class="px-4 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 font-medium rounded-md text-sm cursor-default"><i class="fas fa-check mr-1 text-emerald-500 dark:text-emerald-400"></i> Joined</button>
-            </div>
-          </div>
-        </div>
+      <div id="clubs-container" class="space-y-8 pt-2"></div>
 
-        <!-- Club Card 3: Concrete Canoe -->
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all flex flex-col h-full overflow-hidden">
-          <div class="h-24 bg-gradient-to-r from-orange-400 to-rose-500 dark:from-orange-600/60 dark:to-rose-800/60"></div>
-          <div class="px-6 pb-6 flex-1 flex flex-col relative">
-            <div class="w-16 h-16 rounded-xl bg-white dark:bg-[#130922] border border-slate-200 dark:border-white/20 flex items-center justify-center text-3xl shadow-sm -mt-8 mb-3 overflow-hidden">
-              <i class="fas fa-ship text-orange-500 dark:text-orange-400"></i>
-            </div>
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-2">Concrete Canoe Team</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded text-xs font-semibold border border-rose-100 dark:border-rose-500/30">Competition</span>
-            </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1">Designing, casting, and racing canoes made entirely of lightweight concrete for national competitions.</p>
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
-              <div class="w-7 h-7 rounded-full border-2 border-white dark:border-[#130922] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-slate-300 mr-2">+42</div>
-              <button class="px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-md text-sm shadow-sm transition-colors">Join Team</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Club Card 4: IGS -->
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all flex flex-col h-full overflow-hidden">
-          <div class="h-24 bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-600/60 dark:to-teal-800/60"></div>
-          <div class="px-6 pb-6 flex-1 flex flex-col relative">
-            <div class="w-16 h-16 rounded-xl bg-white dark:bg-[#130922] border border-slate-200 dark:border-white/20 flex items-center justify-center text-3xl shadow-sm -mt-8 mb-3 overflow-hidden">
-              <i class="fas fa-layer-group text-emerald-600 dark:text-emerald-400"></i>
-            </div>
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-2">IGS Student Chapter</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded text-xs font-semibold border border-emerald-100 dark:border-emerald-500/30">Geotech</span>
-            </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1">Indian Geotechnical Society chapter hosting seminars, site visits, and paper presentations on soil mechanics.</p>
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
-              <div class="w-7 h-7 rounded-full border-2 border-white dark:border-[#130922] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-slate-300 mr-2">85+</div>
-              <button class="px-4 py-1.5 bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 font-medium rounded-md text-sm">View Profile</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Club Card 5: GIS & Mapping -->
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm hover:shadow-md dark:hover:border-white/30 transition-all flex flex-col h-full overflow-hidden">
-          <div class="h-24 bg-gradient-to-r from-purple-500 to-fuchsia-600 dark:from-purple-600/60 dark:to-fuchsia-800/60"></div>
-          <div class="px-6 pb-6 flex-1 flex flex-col relative">
-            <div class="w-16 h-16 rounded-xl bg-white dark:bg-[#130922] border border-slate-200 dark:border-white/20 flex items-center justify-center text-3xl shadow-sm -mt-8 mb-3 overflow-hidden">
-              <i class="fas fa-map-location-dot text-purple-600 dark:text-purple-400"></i>
-            </div>
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight mb-2">Geomatics & GIS Club</h3>
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-purple-50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded text-xs font-semibold border border-purple-100 dark:border-purple-500/30">Tech</span>
-            </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1">Learn advanced surveying, drone mapping, and software like ArcGIS and QGIS.</p>
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
-              <div class="w-7 h-7 rounded-full border-2 border-white dark:border-[#130922] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-slate-300 mr-2">56</div>
-              <button class="px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-md text-sm shadow-sm transition-colors">Join Club</button>
-            </div>
-          </div>
-        </div>
+      <div id="clubs-empty" class="hidden text-center py-16 text-slate-400 dark:text-slate-500">
+        <i class="fas fa-magnifying-glass text-2xl mb-3"></i>
+        <p>No clubs match your search.</p>
       </div>
     </div>
 
@@ -481,8 +384,10 @@
           <p class="text-slate-500 dark:text-slate-400 mt-1">Track exams, guest lectures, club meetings, and submissions.</p>
         </div>
         <div class="flex gap-3">
-          <button class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">Sync to Google Calendar</button>
-          <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+          <button id="calendar-sync-btn" class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors flex items-center gap-2">
+            <i class="fab fa-google text-xs"></i> Sync to Google Calendar
+          </button>
+          <button id="calendar-schedule-btn" class="hidden px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors items-center gap-2">
             <i class="fas fa-plus text-xs"></i> Schedule Event
           </button>
         </div>
@@ -491,21 +396,26 @@
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <!-- Calendar Grid Area -->
         <div class="lg:col-span-3 space-y-4">
-          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm flex justify-between items-center transition-colors">
+          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm flex flex-wrap justify-between items-center gap-3 transition-colors">
             <div class="flex items-center gap-4">
               <div class="flex gap-1">
-                <button class="w-8 h-8 rounded hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400"><i class="fas fa-chevron-left text-xs"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400"><i class="fas fa-chevron-right text-xs"></i></button>
+                <button id="calendar-prev-btn" class="w-8 h-8 rounded hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400"><i class="fas fa-chevron-left text-xs"></i></button>
+                <button id="calendar-next-btn" class="w-8 h-8 rounded hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400"><i class="fas fa-chevron-right text-xs"></i></button>
               </div>
-              <h2 class="text-lg font-bold text-slate-900 dark:text-white">August 2026</h2>
-              <button class="px-3 py-1 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 text-xs font-semibold rounded">Today</button>
+              <h2 id="calendar-month-label" class="text-lg font-bold text-slate-900 dark:text-white">August 2026</h2>
+              <button id="calendar-today-btn" class="px-3 py-1 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 text-xs font-semibold rounded">Today</button>
             </div>
             <div class="flex items-center gap-3">
-              <div class="flex bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-transparent dark:border-white/10">
-                <button class="px-4 py-1 bg-white dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded shadow-sm text-sm">Month</button>
-                <button class="px-4 py-1 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded text-sm">Week</button>
+              <div class="relative">
+                <button id="calendar-filter-btn" class="px-3 py-1.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 rounded-lg text-sm font-medium"><i class="fas fa-filter text-xs"></i> Filter</button>
+                <div id="calendar-filter-panel" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-lg z-20 p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Categories</span>
+                    <button id="calendar-filter-clear" class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline">Select all</button>
+                  </div>
+                  <div id="calendar-filter-options" class="space-y-1.5"></div>
+                </div>
               </div>
-              <button class="px-3 py-1.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 rounded-lg text-sm font-medium"><i class="fas fa-filter text-xs"></i> Filter</button>
             </div>
           </div>
 
@@ -519,72 +429,11 @@
               <div class="py-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase border-r border-slate-200 dark:border-white/10">Fri</div>
               <div class="py-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Sat</div>
             </div>
-            <div class="grid grid-cols-7 auto-rows-[120px] bg-slate-200 dark:bg-white/10 gap-px">
-              <!-- Placeholder Days -->
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">26</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">27</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">28</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">29</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">30</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">31</span></div>
-              
-              <!-- Current Month Days -->
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">1</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">2</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">3</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">4</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5">
-                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">5</span>
-                <div class="bg-rose-50 dark:bg-rose-500/20 border border-rose-100 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-file-signature mr-1"></i> Mid-Terms</div>
+            <div id="calendar-grid-days" class="grid grid-cols-7 auto-rows-[120px] bg-slate-200 dark:bg-white/10 gap-px">
+              <!-- JS-rendered day cells (see calendar.js) -->
+              <div class="col-span-7 p-8 text-center text-sm text-slate-400 dark:text-slate-500 bg-white dark:bg-[#0f0a18]/60">
+                <i class="fas fa-spinner fa-spin mr-2"></i>Loading calendar...
               </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">6</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">7</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">8</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5">
-                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">9</span>
-                <div class="bg-purple-50 dark:bg-purple-500/20 border border-purple-100 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-users mr-1"></i> CESS Meet</div>
-              </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">10</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">11</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5">
-                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">12</span>
-                <div class="bg-amber-50 dark:bg-amber-500/20 border border-amber-100 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-clock mr-1"></i> Geotech Assign...</div>
-              </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">13</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">14</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">15</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">16</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">17</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5">
-                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">18</span>
-                <div class="bg-brand-50 dark:bg-brand-500/20 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-chalkboard-teacher mr-1"></i> Guest Lecture</div>
-              </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">19</span></div>
-              <div class="bg-brand-50/30 dark:bg-brand-900/20 p-2 flex flex-col hover:bg-brand-50/50 dark:hover:bg-brand-900/30 relative border-2 border-brand-500 dark:border-brand-500/50 shadow-inner">
-                <div class="flex justify-end mb-1"><span class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold">20</span></div>
-                <div class="bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-100 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-laptop-code mr-1"></i> AutoCAD</div>
-                <div class="bg-purple-50 dark:bg-purple-500/20 border border-purple-100 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-users mr-1"></i> Concrete Canoe</div>
-              </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">21</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">22</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">23</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">24</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">25</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5">
-                <span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">26</span>
-                <div class="bg-amber-50 dark:bg-amber-500/20 border border-amber-100 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-semibold px-1.5 py-1 rounded mb-1 truncate"><i class="fas fa-flask mr-1"></i> Lab Record Due</div>
-              </div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">27</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">28</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">29</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">30</span></div>
-              <div class="bg-white dark:bg-[#0f0a18]/60 p-2 flex flex-col hover:bg-slate-50 dark:hover:bg-white/5"><span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-right">31</span></div>
-
-              <!-- Next Month Placeholder -->
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">1</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">2</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">3</span></div>
-              <div class="bg-slate-50 dark:bg-black/20 p-2 flex flex-col"><span class="text-xs font-medium text-slate-400 dark:text-slate-600 text-right">4</span></div>
             </div>
           </div>
         </div>
@@ -596,34 +445,74 @@
               <h2 class="font-bold text-slate-900 dark:text-white">Upcoming Agenda</h2>
               <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Next 7 days</p>
             </div>
-            <div class="p-5 space-y-6 flex-1">
-              <div class="relative pl-4 border-l-2 border-emerald-500">
-                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white dark:bg-[#0f0a18] border-2 border-emerald-500"></div>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Today, 5:00 PM</p>
-                <h3 class="font-bold text-slate-900 dark:text-white">AutoCAD Workshop</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Computer Lab 2</p>
-              </div>
-              <div class="relative pl-4 border-l-2 border-purple-500">
-                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white dark:bg-[#0f0a18] border-2 border-purple-500"></div>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Today, 6:30 PM</p>
-                <h3 class="font-bold text-slate-900 dark:text-white">Concrete Canoe Team Meet</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Structures Lab</p>
-              </div>
-              <div class="relative pl-4 border-l-2 border-amber-500">
-                <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white dark:bg-[#0f0a18] border-2 border-amber-500"></div>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Aug 26, 11:59 PM</p>
-                <h3 class="font-bold text-slate-900 dark:text-white">Surveying Lab Record Due</h3>
-              </div>
+            <div id="calendar-agenda-list" class="p-5 space-y-6 flex-1">
+              <p class="text-sm text-slate-400 dark:text-slate-500">Loading...</p>
             </div>
             <div class="border-t border-slate-100 dark:border-white/10 p-4 bg-slate-50 dark:bg-white/5 rounded-b-xl">
               <h4 class="text-xs font-bold text-slate-600 dark:text-slate-300 mb-2 uppercase tracking-wider">Legend</h4>
-              <div class="flex flex-wrap gap-2">
-                <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><div class="w-2 h-2 rounded-full bg-brand-500"></div> Academic</span>
-                <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Workshop</span>
-                <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><div class="w-2 h-2 rounded-full bg-purple-500"></div> Club</span>
-                <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><div class="w-2 h-2 rounded-full bg-amber-500"></div> Deadline</span>
-                <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300"><div class="w-2 h-2 rounded-full bg-rose-500"></div> Exams</span>
+              <div id="calendar-legend" class="flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4b. TIME TABLE VIEW -->
+    <div id="view-timetable" class="page-view hidden p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Time Table</h1>
+          <p class="text-slate-500 dark:text-slate-400 mt-1">Weekly class schedule, B.Tech Civil Engineering — 1st Year.</p>
+        </div>
+        <button id="timetable-sync-btn" class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors flex items-center gap-2">
+          <i class="fab fa-google text-xs"></i> Sync to Google Calendar
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Weekly Grid Area -->
+        <div class="lg:col-span-3 space-y-4">
+          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl p-4 shadow-sm flex flex-wrap justify-between items-center gap-3 transition-colors">
+            <div class="flex items-center gap-3">
+              <label for="timetable-batch-select" class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sub-batch</label>
+              <select id="timetable-batch-select" class="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm font-semibold text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"></select>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <button id="timetable-filter-btn" class="px-3 py-1.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 rounded-lg text-sm font-medium"><i class="fas fa-filter text-xs"></i> Filter</button>
+                <div id="timetable-filter-panel" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-lg z-20 p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Session Type</span>
+                    <button id="timetable-filter-clear" class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline">Select all</button>
+                  </div>
+                  <div id="timetable-filter-options" class="space-y-1.5"></div>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden transition-colors">
+            <div id="timetable-grid" class="overflow-x-auto">
+              <div class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
+                <i class="fas fa-spinner fa-spin mr-2"></i>Loading time table...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Agenda Sidebar -->
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl shadow-sm h-full flex flex-col transition-colors">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-white/10">
+              <h2 class="font-bold text-slate-900 dark:text-white">Today's Classes</h2>
+              <p id="timetable-today-label" class="text-xs text-slate-500 dark:text-slate-400 mt-1">—</p>
+            </div>
+            <div id="timetable-today-list" class="p-5 space-y-3 flex-1">
+              <p class="text-sm text-slate-400 dark:text-slate-500">Loading...</p>
+            </div>
+            <div class="border-t border-slate-100 dark:border-white/10 p-4 bg-slate-50 dark:bg-white/5 rounded-b-xl">
+              <h4 class="text-xs font-bold text-slate-600 dark:text-slate-300 mb-2 uppercase tracking-wider">Legend</h4>
+              <div id="timetable-legend" class="flex flex-wrap gap-2"></div>
             </div>
           </div>
         </div>
@@ -637,29 +526,29 @@
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">My Uploads</h1>
           <p class="text-slate-500 dark:text-slate-400 mt-1">Track the moderation status of your contributed study materials.</p>
         </div>
-        <button class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
+        <button id="myuploads-new-btn" class="px-4 py-2 bg-brand-600 text-white font-medium rounded-lg shadow-sm hover:bg-brand-700 transition-colors flex items-center gap-2">
           <i class="fas fa-arrow-up-from-bracket text-xs"></i> Upload New Material
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Uploads</p><div class="p-1.5 bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg"><i class="fas fa-file-alt"></i></div></div><h3 class="text-2xl font-bold text-slate-900 dark:text-white">14</h3></div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Approved</p><div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg"><i class="fas fa-check-circle"></i></div></div><h3 class="text-2xl font-bold text-slate-900 dark:text-white">11</h3></div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm border-l-4 border-l-amber-500 transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Review</p><div class="p-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-lg"><i class="fas fa-clock"></i></div></div><h3 class="text-2xl font-bold text-slate-900 dark:text-white">2</h3></div>
-        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Contributor Points</p><div class="p-1.5 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-lg"><i class="fas fa-star"></i></div></div><h3 class="text-2xl font-bold text-slate-900 dark:text-white">240</h3></div>
+        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Uploads</p><div class="p-1.5 bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg"><i class="fas fa-file-alt"></i></div></div><h3 id="myuploads-total" class="text-2xl font-bold text-slate-900 dark:text-white">0</h3></div>
+        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Approved</p><div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg"><i class="fas fa-check-circle"></i></div></div><h3 id="myuploads-approved" class="text-2xl font-bold text-slate-900 dark:text-white">0</h3></div>
+        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm border-l-4 border-l-amber-500 transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Review</p><div class="p-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-lg"><i class="fas fa-clock"></i></div></div><h3 id="myuploads-pending" class="text-2xl font-bold text-slate-900 dark:text-white">0</h3></div>
+        <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg rounded-xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-colors"><div class="flex justify-between items-start mb-2"><p class="text-sm font-medium text-slate-500 dark:text-slate-400">Contributor Points</p><div class="p-1.5 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-lg"><i class="fas fa-star"></i></div></div><h3 id="myuploads-points" class="text-2xl font-bold text-slate-900 dark:text-white">0</h3></div>
       </div>
 
       <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden flex flex-col shadow-sm transition-colors">
         <div class="p-4 border-b border-slate-200 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-white/[0.02]">
           <div class="flex bg-white dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10 shadow-sm w-full sm:w-auto">
-            <button class="px-4 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">All</button>
-            <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Approved</button>
-            <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Pending</button>
-            <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Rejected</button>
+            <button data-status="all" class="myuploads-filter-btn px-4 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">All</button>
+            <button data-status="approved" class="myuploads-filter-btn px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Approved</button>
+            <button data-status="pending" class="myuploads-filter-btn px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Pending</button>
+            <button data-status="rejected" class="myuploads-filter-btn px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Rejected</button>
           </div>
           <div class="relative w-full sm:w-72">
             <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 dark:text-slate-500 text-sm"></i>
-            <input type="text" placeholder="Search my uploads..." class="w-full pl-9 pr-4 py-2 rounded-md bg-white dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-500 transition-shadow">
+            <input type="text" id="myuploads-search" placeholder="Search my uploads..." class="w-full pl-9 pr-4 py-2 rounded-md bg-white dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-500 transition-shadow">
           </div>
         </div>
 
@@ -668,53 +557,20 @@
             <thead class="bg-white dark:bg-transparent text-slate-500 dark:text-slate-400 font-medium border-b border-slate-200 dark:border-white/10">
               <tr><th class="px-6 py-4">Document Name</th><th class="px-6 py-4">Subject</th><th class="px-6 py-4">Status</th><th class="px-6 py-4">Date Submitted</th><th class="px-6 py-4 text-right">Actions</th></tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-pdf text-red-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Surveying Field Book Scans.pdf</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Sem 4 • 12.4 MB</p></div></td>
-                <td class="px-6 py-4">Surveying II</td>
-                <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-medium px-2.5 py-1 rounded-md text-xs border border-amber-200 dark:border-amber-500/30"><i class="fas fa-circle-notch fa-spin text-[10px]"></i> Pending Review</span></td>
-                <td class="px-6 py-4">Today, 09:15 AM</td>
-                <td class="px-6 py-4 text-right">
-                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-pen text-sm"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"><i class="fas fa-trash text-sm"></i></button></div>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-word text-blue-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Geotech Lab Observation.docx</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Sem 4 • 2.1 MB</p></div></td>
-                <td class="px-6 py-4">Geotech Engineering</td>
-                <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-medium px-2.5 py-1 rounded-md text-xs border border-amber-200 dark:border-amber-500/30"><i class="fas fa-circle-notch fa-spin text-[10px]"></i> Pending Review</span></td>
-                <td class="px-6 py-4">Yesterday, 04:30 PM</td>
-                <td class="px-6 py-4 text-right">
-                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-pen text-sm"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"><i class="fas fa-trash text-sm"></i></button></div>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-pdf text-red-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Fluid Mechanics Unit 2 Notes.pdf</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Sem 4 • 8.2 MB</p></div></td>
-                <td class="px-6 py-4">Fluid Mechanics</td>
-                <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-medium px-2.5 py-1 rounded-md text-xs border border-emerald-200 dark:border-emerald-500/30"><i class="fas fa-check-circle text-[10px]"></i> Approved</span></td>
-                <td class="px-6 py-4">Aug 14, 2026</td>
-                <td class="px-6 py-4 text-right">
-                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-external-link-alt text-sm"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"><i class="fas fa-ellipsis-v text-sm px-2"></i></button></div>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-alt text-slate-400 dark:text-slate-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Structural Analysis Test 1.pdf</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Sem 4 • 4.5 MB</p></div></td>
-                <td class="px-6 py-4">Structural Analysis</td>
-                <td class="px-6 py-4"><div class="flex flex-col gap-1 items-start"><span class="inline-flex items-center gap-1.5 bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 font-medium px-2.5 py-1 rounded-md text-xs border border-rose-200 dark:border-rose-500/30"><i class="fas fa-times-circle text-[10px]"></i> Rejected</span><span class="text-[10px] text-slate-500 dark:text-slate-400">Reason: Duplicate file</span></div></td>
-                <td class="px-6 py-4">Aug 10, 2026</td>
-                <td class="px-6 py-4 text-right">
-                  <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"><i class="fas fa-trash text-sm"></i></button></div>
+            <tbody id="myuploads-tbody" class="divide-y divide-slate-100 dark:divide-white/5">
+              <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-slate-400 dark:text-slate-500">
+                  <i class="fas fa-spinner fa-spin mr-2"></i> Loading your uploads...
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between bg-white dark:bg-transparent transition-colors">
-          <span class="text-sm text-slate-500 dark:text-slate-400">Showing 1 to 4 of 14 entries</span>
+          <span id="myuploads-pagination-info" class="text-sm text-slate-500 dark:text-slate-400">Loading...</span>
           <div class="flex gap-1">
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed">Previous</button>
-            <button class="px-3 py-1 border border-brand-600 dark:border-brand-500 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-medium rounded text-sm">1</button>
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">2</button>
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">Next</button>
+            <button id="myuploads-prev-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Previous</button>
+            <button id="myuploads-next-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Next</button>
           </div>
         </div>
       </div>
@@ -727,80 +583,82 @@
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Saved Resources</h1>
           <p class="text-slate-500 dark:text-slate-400 mt-1">Your personal collection of bookmarked materials.</p>
         </div>
-        <button class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg flex items-center gap-2 shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">
+        <button id="saved-new-folder-btn" class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg flex items-center gap-2 shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">
           <i class="fas fa-folder-plus text-xs"></i> New Collection
         </button>
       </div>
 
       <div>
         <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">My Collections</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 shadow-sm rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:border-brand-400 dark:hover:border-white/30 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-amber-50 dark:bg-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center text-xl"><i class="fas fa-folder-open"></i></div>
-            <div><h3 class="font-bold text-slate-900 dark:text-white">Mid-Term Prep</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">8 Files</p></div>
-          </div>
-          <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 shadow-sm rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:border-brand-400 dark:hover:border-white/30 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl"><i class="fas fa-folder-open"></i></div>
-            <div><h3 class="font-bold text-slate-900 dark:text-white">Important Formulas</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">3 Files</p></div>
-          </div>
-          <div class="bg-white dark:bg-transparent border border-dashed border-slate-200 dark:border-white/20 shadow-sm rounded-xl p-5 flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-            <div class="text-center"><i class="fas fa-plus text-slate-400 dark:text-slate-500 mb-1 text-lg"></i><h3 class="font-medium text-slate-600 dark:text-slate-400">Create Folder</h3></div>
-          </div>
+        <div id="saved-folders-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div class="col-span-full text-sm text-slate-400 dark:text-slate-500"><i class="fas fa-spinner fa-spin mr-2"></i> Loading your collections...</div>
         </div>
       </div>
 
       <div class="bg-white dark:bg-white/[0.03] dark:backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden mt-4 shadow-sm transition-colors">
         <div class="p-4 border-b border-slate-200 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-white/[0.02]">
-          <div class="flex bg-white dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10 shadow-sm w-full sm:w-auto">
-            <button class="px-4 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">All Saved</button>
-            <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">Notes</button>
-            <button class="px-4 py-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium rounded-md text-sm transition-all flex-1 sm:flex-none text-center">PYQs</button>
-          </div>
+          <div id="saved-filter-tabs" class="flex flex-wrap bg-white dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10 shadow-sm w-full sm:w-auto gap-1"></div>
           <div class="relative w-full sm:w-72">
             <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 dark:text-slate-500 text-sm"></i>
-            <input type="text" placeholder="Search saved files..." class="w-full pl-9 pr-4 py-2 rounded-md bg-white dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-500 transition-shadow">
+            <input type="text" id="saved-search" placeholder="Search saved files..." class="w-full pl-9 pr-4 py-2 rounded-md bg-white dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-slate-800 dark:text-white dark:placeholder-slate-500 transition-shadow">
           </div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
             <thead class="bg-white dark:bg-transparent text-slate-500 dark:text-slate-400 font-medium border-b border-slate-200 dark:border-white/10">
-              <tr><th class="px-6 py-4">Document Name</th><th class="px-6 py-4">Subject</th><th class="px-6 py-4">Date Saved</th><th class="px-6 py-4 text-right">Actions</th></tr>
+              <tr><th class="px-6 py-4">Document Name</th><th class="px-6 py-4">Subject</th><th class="px-6 py-4">Date Saved</th><th class="px-6 py-4">Collection</th><th class="px-6 py-4 text-right">Actions</th></tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-pdf text-red-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Fluid Mechanics Unit 2 Notes.pdf</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">8.2 MB • Handwritten</p></div></td>
-                <td class="px-6 py-4">Fluid Mechanics</td><td class="px-6 py-4">2 days ago</td>
-                <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-amber-500 hover:text-slate-400 dark:hover:text-slate-500 transition-colors"><i class="fas fa-bookmark text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"><i class="fas fa-folder-plus text-lg px-2"></i></button></div></td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-pdf text-red-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Structural Analysis PYQs (2020-25).pdf</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">14.5 MB • Question Bank</p></div></td>
-                <td class="px-6 py-4">Structural Analysis</td><td class="px-6 py-4">1 week ago</td>
-                <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-amber-500 hover:text-slate-400 dark:hover:text-slate-500 transition-colors"><i class="fas fa-bookmark text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"><i class="fas fa-folder-plus text-lg px-2"></i></button></div></td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-image text-emerald-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Geotech Soil Mechanics Chart.jpg</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">2.4 MB • Reference</p></div></td>
-                <td class="px-6 py-4">Geotech Engineering</td><td class="px-6 py-4">Aug 10, 2026</td>
-                <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-amber-500 hover:text-slate-400 dark:hover:text-slate-500 transition-colors"><i class="fas fa-bookmark text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"><i class="fas fa-folder-plus text-lg px-2"></i></button></div></td>
-              </tr>
-              <tr class="hover:bg-slate-50 dark:hover:bg-white/5 group transition-colors">
-                <td class="px-6 py-4 flex items-center gap-3"><i class="fas fa-file-word text-blue-500 text-xl"></i><div><p class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 cursor-pointer">Surveying Leveling Data Template.docx</p><p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">340 KB • Lab Manual</p></div></td>
-                <td class="px-6 py-4">Surveying II</td><td class="px-6 py-4">Jul 28, 2026</td>
-                <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button class="text-amber-500 hover:text-slate-400 dark:hover:text-slate-500 transition-colors"><i class="fas fa-bookmark text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"><i class="fas fa-download text-lg"></i></button><button class="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"><i class="fas fa-folder-plus text-lg px-2"></i></button></div></td>
-              </tr>
+            <tbody id="saved-items-tbody" class="divide-y divide-slate-100 dark:divide-white/5">
+              <tr><td colspan="5" class="px-6 py-8 text-center text-slate-400 dark:text-slate-500"><i class="fas fa-spinner fa-spin mr-2"></i> Loading saved resources...</td></tr>
             </tbody>
           </table>
         </div>
         <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between bg-white dark:bg-transparent transition-colors">
-          <span class="text-sm text-slate-500 dark:text-slate-400">Showing 1 to 4 of 24 saved items</span>
+          <span id="saved-pagination-info" class="text-sm text-slate-500 dark:text-slate-400">Loading...</span>
           <div class="flex gap-1">
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed">Previous</button>
-            <button class="px-3 py-1 border border-brand-600 dark:border-brand-500 bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-medium rounded text-sm">1</button>
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">2</button>
-            <button class="px-3 py-1 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded text-sm text-slate-600 dark:text-slate-400">Next</button>
+            <button id="saved-prev-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Previous</button>
+            <button id="saved-next-btn" class="px-3 py-1 border border-slate-200 dark:border-white/10 rounded text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed" disabled>Next</button>
           </div>
         </div>
       </div>
     </div>
+
+      <!-- New Collection Modal (Saved Resources) -->
+  <div id="saved-folder-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div id="saved-folder-modal-box" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-blue-400 flex items-center justify-center text-sm">
+            <i class="fas fa-folder-plus"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">New Collection</h3>
+        </div>
+        <button id="saved-folder-modal-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="saved-folder-form" class="p-6 flex flex-col gap-4">
+        <div>
+          <label for="saved-folder-name-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Collection Name</label>
+          <input type="text" id="saved-folder-name-input" placeholder="e.g., Semester 3 Notes" maxlength="40" autocomplete="off"
+                 class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" required>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mt-1.5">Group your saved resources — you can move items between collections later.</p>
+        </div>
+
+        <p id="saved-folder-error" class="hidden text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 rounded-lg px-3 py-2"></p>
+
+        <div class="flex items-center justify-end gap-3 mt-1">
+          <button type="button" id="saved-folder-cancel-btn" class="px-4 py-2.5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-sm">
+            Cancel
+          </button>
+          <button type="submit" id="saved-folder-submit-btn" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            <span id="saved-folder-submit-label">Create Collection</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
       <!-- Admin: New Announcement / Event Modal -->
   <div id="admin-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
@@ -840,6 +698,17 @@
           <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Location</label>
           <input type="text" id="admin-location" placeholder="e.g., Room 101" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
         </div>
+        <div id="admin-category-field" class="hidden">
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Category</label>
+          <select id="admin-category" class="w-full p-2.5 border border-slate-200 dark:border-white/10 rounded-lg dark:bg-white/5 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="academic">Academic</option>
+            <option value="workshop" selected>Workshop</option>
+            <option value="club">Club / Fest</option>
+            <option value="deadline">Deadline</option>
+            <option value="exams">Exams</option>
+          </select>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Sets the color/legend on the Events Calendar.</p>
+        </div>
 
         <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-medium py-2.5 rounded-lg transition-colors text-sm mt-2">
           Post Update
@@ -847,6 +716,130 @@
 
         <p id="admin-feedback" class="text-sm hidden"></p>
       </form>
+    </div>
+  </div>
+
+  <!-- Event Detail Modal -->
+  <div id="event-detail-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-start justify-between gap-3">
+        <div>
+          <span id="event-detail-category-badge" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md border mb-2"></span>
+          <h3 id="event-detail-title" class="text-lg font-bold text-slate-900 dark:text-white leading-snug"></h3>
+        </div>
+        <button id="event-detail-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1 shrink-0">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <i class="fas fa-calendar-day text-slate-400 dark:text-slate-500 mt-0.5 w-4 text-center"></i>
+          <span id="event-detail-date"></span>
+        </div>
+        <div id="event-detail-location-row" class="hidden flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <i class="fas fa-location-dot text-slate-400 dark:text-slate-500 mt-0.5 w-4 text-center"></i>
+          <span id="event-detail-location"></span>
+        </div>
+        <p id="event-detail-description" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+      </div>
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex justify-end">
+        <a id="event-detail-gcal-link" href="#" target="_blank" rel="noopener" class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-sm flex items-center gap-2">
+          <i class="fab fa-google"></i> Add to Google Calendar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google Calendar Sync Tutorial Modal -->
+  <div id="gcal-tutorial-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white"><i class="fab fa-google text-brand-500 mr-2"></i>Sync to Google Calendar</h3>
+        <button id="gcal-tutorial-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <p class="text-sm text-slate-500 dark:text-slate-400">This downloads a single <code class="px-1 py-0.5 bg-slate-100 dark:bg-white/10 rounded text-xs">.ics</code> file with every event currently visible on the calendar (respecting your active filters). Import it into Google Calendar in three quick steps:</p>
+        <ol class="space-y-3">
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">1</span><span>Click <strong>Download .ics File</strong> below — it'll land in your Downloads folder.</span></li>
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">2</span><span>On Google Calendar, click the gear icon → <strong>Settings</strong> → <strong>Import &amp; export</strong>.</span></li>
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">3</span><span>Under <strong>Import</strong>, select the downloaded file and pick which calendar to add it to, then click <strong>Import</strong>.</span></li>
+        </ol>
+        <p class="text-xs text-slate-400 dark:text-slate-500">Prefer adding events one at a time instead? Open any event on the calendar and use its own "Add to Google Calendar" button.</p>
+        <label class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2">
+          <input type="checkbox" id="gcal-tutorial-dont-show" class="rounded border-slate-300 dark:border-white/20 text-brand-600 focus:ring-brand-500">
+          Don't show this again
+        </label>
+      </div>
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex justify-end gap-3">
+        <button id="gcal-tutorial-cancel" type="button" class="px-4 py-2 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm">Cancel</button>
+        <button id="gcal-tutorial-download" type="button" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2"><i class="fas fa-download"></i> Download .ics File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Class Detail Modal (Time Table) -->
+  <div id="class-detail-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-start justify-between gap-3">
+        <div>
+          <span id="class-detail-type-badge" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md border mb-2"></span>
+          <h3 id="class-detail-title" class="text-lg font-bold text-slate-900 dark:text-white leading-snug"></h3>
+        </div>
+        <button id="class-detail-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1 shrink-0">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <i class="fas fa-clock text-slate-400 dark:text-slate-500 mt-0.5 w-4 text-center"></i>
+          <span id="class-detail-time"></span>
+        </div>
+        <div id="class-detail-location-row" class="hidden flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <i class="fas fa-location-dot text-slate-400 dark:text-slate-500 mt-0.5 w-4 text-center"></i>
+          <span id="class-detail-location"></span>
+        </div>
+        <div id="class-detail-batch-row" class="hidden flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
+          <i class="fas fa-users text-slate-400 dark:text-slate-500 mt-0.5 w-4 text-center"></i>
+          <span id="class-detail-batch"></span>
+        </div>
+        <p id="class-detail-faculty" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+      </div>
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex justify-end">
+        <a id="class-detail-gcal-link" href="#" target="_blank" rel="noopener" class="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-sm flex items-center gap-2">
+          <i class="fab fa-google"></i> Add to Google Calendar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Table Google Calendar Sync Tutorial Modal -->
+  <div id="timetable-gcal-tutorial-modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white"><i class="fab fa-google text-brand-500 mr-2"></i>Sync Time Table to Google Calendar</h3>
+        <button id="timetable-gcal-tutorial-close" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors p-1">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <p class="text-sm text-slate-500 dark:text-slate-400">This downloads a single <code class="px-1 py-0.5 bg-slate-100 dark:bg-white/10 rounded text-xs">.ics</code> file with every class currently shown for <strong id="timetable-gcal-tutorial-batch">your batch</strong> (respecting your active filters), set to repeat weekly until the last day of teaching. Import it into Google Calendar in three quick steps:</p>
+        <ol class="space-y-3">
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">1</span><span>Click <strong>Download .ics File</strong> below — it'll land in your Downloads folder.</span></li>
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">2</span><span>On Google Calendar, click the gear icon → <strong>Settings</strong> → <strong>Import &amp; export</strong>.</span></li>
+          <li class="flex gap-3 text-sm text-slate-700 dark:text-slate-200"><span class="shrink-0 w-6 h-6 rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 font-bold text-xs flex items-center justify-center">3</span><span>Under <strong>Import</strong>, select the downloaded file and pick which calendar to add it to, then click <strong>Import</strong>.</span></li>
+        </ol>
+        <p class="text-xs text-slate-400 dark:text-slate-500">Prefer adding one class at a time instead? Open any class on the grid and use its own "Add to Google Calendar" button.</p>
+        <label class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2">
+          <input type="checkbox" id="timetable-gcal-tutorial-dont-show" class="rounded border-slate-300 dark:border-white/20 text-brand-600 focus:ring-brand-500">
+          Don't show this again
+        </label>
+      </div>
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex justify-end gap-3">
+        <button id="timetable-gcal-tutorial-cancel" type="button" class="px-4 py-2 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium rounded-lg shadow-sm hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm">Cancel</button>
+        <button id="timetable-gcal-tutorial-download" type="button" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2"><i class="fas fa-download"></i> Download .ics File</button>
+      </div>
     </div>
   </div>
 

@@ -93,12 +93,24 @@
                     <!-- End of change -->
                     <p class="pl-1">or drag and drop</p>
                     </div>
-                <p class="text-xs leading-5 text-slate-500 dark:text-slate-400 mt-1">PDF, DOCX, XLSX, or Images up to 20MB</p>
+                <p class="text-xs leading-5 text-slate-500 dark:text-slate-400 mt-1">PDF, DOCX, XLSX, or Images up to 100MB</p>
                 
                 <!-- Display selected file name dynamically -->
                 <div id="file-name-display" class="hidden mt-4 inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-lg text-sm font-medium border border-emerald-200 dark:border-emerald-500/30">
                   <i class="fas fa-check-circle"></i> <span id="file-name-text">filename.pdf</span>
                 </div>
+
+                <!-- Upload Progress Bar -->
+                <div id="upload-progress-wrap" class="hidden mt-4 w-full max-w-xs mx-auto">
+                  <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+                    <span>Uploading...</span>
+                    <span id="upload-progress-pct">0%</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                    <div id="upload-progress-bar" class="h-full bg-brand-600 rounded-full transition-all duration-150 ease-out" style="width: 0%"></div>
+                  </div>
+                </div>
+                                
               </div>
             </div>
           </div>
@@ -110,32 +122,7 @@
               <input type="text" id="doc-name" placeholder="e.g., Fluid Mechanics Unit 2 Notes" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white dark:placeholder-slate-500 transition-shadow" required>
             </div>
 
-            <!-- Subject -->
-            <div>
-              <label for="subject" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject <span class="text-rose-500">*</span></label>
-              <select id="subject" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
-                <option value="" disabled selected>Select subject</option>
-                <option>Engineering Mechanics</option>
-                <option>Geospatial Engineering-I</option>
-                <option>Geospatial Engineering-II</option>
-                <option>Fluid Mechanics</option>
-                <option>Solid Mechanics</option>
-                <option>Structural Analysis-I</option>
-                <option>Structural Analysis-II</option>
-                <option>Channel Hydraulics</option>
-                <option>Water Supply Engineering</option>
-                <option>Design of Reinforced Concrete</option>
-                <option>Soil Mechanics</option>
-                <option>Waste Water Engineering</option>
-                <option>Design of Steel Elements</option>
-                <option>Highway and Traffic Engineering</option>
-                <option>Design of Structural Systems</option>
-                <option>Foundation Engineering</option>
-                <option>Railway Engineering</option>
-              </select>
-            </div>
-
-            <!-- Semester -->
+            <!-- Semester (choose first — Subject options depend on this) -->
             <div>
               <label for="semester" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Semester <span class="text-rose-500">*</span></label>
               <select id="semester" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
@@ -151,16 +138,34 @@
               </select>
             </div>
 
+            <!-- Subject: populated dynamically from curriculum-data.js based on the
+                 chosen Semester (see contribute_material.js). Disabled until a
+                 semester is picked so users can't mismatch sem/subject. -->
+            <div>
+              <label for="subject" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject <span class="text-rose-500">*</span></label>
+              <select id="subject" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" required disabled>
+                <option value="" disabled selected>Select semester first</option>
+              </select>
+            </div>
+
             <!-- Material Type -->
             <div>
               <label for="type" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Resource Type <span class="text-rose-500">*</span></label>
               <select id="type" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-[#0f0a18]/50 border border-slate-200 dark:border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white transition-shadow appearance-none cursor-pointer" required>
                 <option value="" disabled selected>Select material type</option>
-                <option>Handwritten Notes</option>
-                <option>PYQ (Previous Year Question)</option>
-                <option>Lab Manual / Record</option>
-                <option>Class Presentation</option>
-                <option>Reference Book</option>
+                <option>Lecture Slides</option>
+                <option>Reference Lecture Notes </option>
+                <option>Handwritten Notes (Teacher)</option>
+                <option>Handwritten Notes (Student)</option>
+                <option>Practicals</option>
+                <option>Question Papers</option>
+                <option>Question Paper Solutions</option>
+                <option>Assignments</option>
+                <option>Assignment Solutions</option>
+                <option>Reference Books</option>
+                <option>Tutorials</option>
+                <option>Tutorial Solutions</option>
+                <option>Miscellaneous</option>
               </select>
             </div>
             
