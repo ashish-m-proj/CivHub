@@ -9,7 +9,7 @@ import { ACADEMIC_CALENDAR, CATEGORY_META, CATEGORY_IDS } from './academic-calen
 import { TIMETABLE_DAYS, TIMETABLE_BATCHES, TIMETABLE_SLOTS, TIMETABLE_TYPE_META, TIMETABLE_ENTRIES } from './timetable-data.js';
 
 // brcrEmails is now UI-only — real admin gating lives in Firestore Rules (roles/{uid})
-const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'anushka_rv@ce.iitr.ac.in', 'boya_rk@ce.iitr.ac.in'];
+const brcrEmails = ['ashish_m@ce.iitr.ac.in', 'saksham_h@ce.iitr.ac.in', 'boya_rk@ce.iitr.ac.in'];
 
 // ==========================================
 // 2. DOM ELEMENTS (Auth)
